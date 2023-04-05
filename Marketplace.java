@@ -4,9 +4,10 @@ import java.util.*;
 
 public class Marketplace {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
         boolean validUser = true;
+        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
         
         do {
             validUser = true;
@@ -34,25 +35,57 @@ public class Marketplace {
                 }
 
             } else if (user == 2) {
-                System.out.println("What would you like to do?");
-                System.out.println("1. Create a product");
-                System.out.println("2. Edit/Delete a product");
-                System.out.println("3. Create a store");
-                System.out.println("4. View stores");
-                int selection = scan.nextInt();
-                scan.nextLine();
+                System.out.println("Enter username:");
+                String username = scan.nextLine();
+                System.out.println("Enter password:");
+                String password = scan.nextLine();
+                boolean loggedIn = false;
 
-                switch(selection) {
-                    case 1:
-                    break;
-                    case 2:
-                    break;
-                    case 3:
-                    break;
-                    case 4:
-                    break;
-                    default:
-                    System.out.println("Please enter a valid input");
+                String line;
+                try {
+                    line = br.readLine();
+                    while (line != null) {
+                        String[] lineSplit = line.split(";");
+                        if (lineSplit[1].equals(username)) {
+                            if (lineSplit[2].equals(password)) {
+                                loggedIn = true;
+                            }
+                        }
+                        line = br.readLine();
+                    }
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                if (loggedIn) {
+                    System.out.println("What would you like to do?");
+                    System.out.println("1. Create a product");
+                    System.out.println("2. Edit/Delete a product");
+                    System.out.println("3. Create a store");
+                    System.out.println("4. View stores");
+                    int selection = scan.nextInt();
+                    scan.nextLine();
+    
+                    switch(selection) {
+                        case 1:
+                            System.out.println("What's the name of the product?");
+                            String product = scan.nextLine();
+                            System.out.println("Which store will it go in?");
+                            //print stores
+                            System.out.println("stores");
+                        break;
+                        case 2:
+                        break;
+                        case 3:
+                        break;
+                        case 4:
+                        break;
+                        default:
+                        System.out.println("Please enter a valid input");
+                    }
+                } else {
+                    System.out.println("Login failed!");
                 }
 
             } else if (user == 3) {

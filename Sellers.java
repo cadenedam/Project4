@@ -13,7 +13,7 @@ public class Sellers {
         this.password = password;
     }
 
-    public String addStore(String store) {
+    public void addStore(String store) {
         stores.add(store);
     }
 
