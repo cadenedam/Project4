@@ -14,7 +14,7 @@ public class Sellers {
 
     public void addProduct(String product, String store, String description, int quantity, double price) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("products.txt", true), true);
-        pw.write(username + ";" + store + ";" + description + ";" + quantity + ";" + price);
+        pw.write(username + ";" + store + ";" + product + ";" + description + ";" + quantity + ";" + price);
         pw.println();
         pw.close();
     }
