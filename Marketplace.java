@@ -94,8 +94,8 @@ public class Marketplace {
     }
 
     public static void addUser(String userType, String username, String password) throws IOException {
-        PrintWriter pw = new PrintWriter(new FileWriter("users.txt"), true);
-        pw.append(userType + ";" + username + ";" + password);
+        PrintWriter pw = new PrintWriter(new FileWriter("users.txt", true), true);
+        pw.write(userType + ";" + username + ";" + password);
         pw.println();
         pw.close();
     }
