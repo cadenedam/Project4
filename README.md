@@ -1,5 +1,14 @@
 # Project4
 
+
+Sam Hall: Statistics
+
+Caden Edam: Market, Customers
+
+AnnMarie: Sellers
+
+Roshan: Selections
+
 To do:
 
 Market
@@ -38,12 +47,3 @@ Statistics
 - Shopping cart
 - Customers can add products from different stores to a shopping cart to purchase all at once, and can remove any product if they choose to do so. The shopping cart is preserved between sessions, so a customer may choose to sign out and return to make the purchase later.  
 - Sellers can view the number of products currently in customer shopping carts, along with the store and details associated with the products. 
-
-
-Sam Hall: Statistics
-
-Caden Edam: Market, Customers
-
-AnnMarie: Sellers
-
-Roshan: Selections
