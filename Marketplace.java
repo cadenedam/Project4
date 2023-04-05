@@ -3,13 +3,15 @@ import java.net.*;
 import java.util.*;
 
 public class Marketplace {
+    //Hashmaps are temporarily fucked up cuz im not good at them
     //Creates hashmaps for sellers and customers.
     //Basically think of an ArrayList, where each element has a title (the string)
     //And each title is associated with a sellers/customers account
-    public static Map <String, Sellers> sellers = new HashMap<String, Sellers>();
-    public static Map <String, Customers> customers = new HashMap<String, Customers>();
+    public static HashMap <String, Sellers> sellers = new HashMap<String, Sellers>();
+    public static HashMap <String, Customers> customers = new HashMap<String, Customers>();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
+        populateHashMaps();
         Scanner scan = new Scanner(System.in);
         boolean validUser = true;
         BufferedReader br = new BufferedReader(new FileReader("users.txt"));
@@ -90,9 +92,13 @@ public class Marketplace {
                         break;
                         //Create store
                         case 3:
+                            System.out.println("What's the name of the store?");
+                            String storeName = scan.nextLine();
+                            (sellers.get(username)).addStore(storeName);
                         break;
                         //View Stores
                         case 4:
+                            (sellers.get(username)).getStores();
                         break;
                         default:
                         System.out.println("Please enter a valid input");
@@ -150,9 +156,27 @@ public class Marketplace {
         //"put" adds them to the hashmaps, with the specified username, 
         //and the specified user profile
         if (userType.equals("Seller")) {
-            sellers.put(username, new Sellers(username, password));
+            Sellers newSeller = new Sellers(username, password);
+            sellers.put(username, newSeller);
         } else {
-            customers.put(username, new Customers(username, password));
+            Customers newCustomer = new Customers(username, password);
+            customers.put(username, newCustomer);
+        }
+    }
+
+    public static void populateHashMaps() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+
+            if (splitLine[0].equals("Seller")) {
+                sellers.put(splitLine[1], new Sellers(splitLine[1], splitLine[2]));
+            } else {
+                customers.put(splitLine[1], new Customers(splitLine[1], splitLine[2]));
+            }
+            line = br.readLine();
         }
     }
 }

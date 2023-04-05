@@ -6,21 +6,30 @@ public class Sellers {
 
     public String username;
     public String password;
-    public ArrayList<String> stores = new ArrayList<String>();
 
     public Sellers(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public void addStore(String store) {
-        stores.add(store);
+    public void addStore(String store) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter("stores.txt", true), true);
+        pw.write(username + ";" + store);
+        pw.println();
+        pw.close();
     }
 
-    public String getStores() {
+    public String getStores() throws IOException {
         String sellerStores = "";
-        for (int i = 0; i < stores.size(); i++) {
-            sellerStores = sellerStores + stores.get(i) + ", ";
+        BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[0].equals(username)) {
+                sellerStores = sellerStores + splitLine[1] + ", ";
+            }
+            line = br.readLine();
         }
         return sellerStores;
     }
