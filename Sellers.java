@@ -19,6 +19,49 @@ public class Sellers {
         pw.close();
     }
 
+    public void deleteProduct(String product) throws IOException {
+        ArrayList<String> allProducts = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+        String useless = "";
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[0].equals(username) && splitLine[2].equals(product)) {
+                useless = useless + line;
+            } else {
+                allProducts.add(line);
+            }
+            line = br.readLine();
+        }
+
+        PrintWriter pw = new PrintWriter(new FileWriter("products.txt"), true);
+        
+        for (int i = 0; i < allProducts.size(); i++) {
+            pw.print(allProducts.get(i) + "\n");
+        }
+        pw.close();
+    }
+
+    public String getProducts() throws IOException {
+        String allProducts = "";
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+        int counter = 0;
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[0].equals(username) && counter > 0) {
+                allProducts = allProducts + ", " + splitLine[2];
+            } else {
+                allProducts = allProducts + splitLine[2];
+                counter++;
+            }
+            line = br.readLine();
+        }
+        return allProducts;
+    }
+
     public void addStore(String store) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("stores.txt", true), true);
         pw.write(username + ";" + store);

@@ -106,6 +106,23 @@ public class Marketplace {
                                 break;
                                 //Edit/Delete product
                                 case 2:
+                                System.out.println("What would you like to do?\n1. Edit\n2. Delete");
+                                int choice = scan.nextInt();
+                                scan.nextLine();
+
+                                if (choice == 1) {
+                                    System.out.println("Which product would you like to edit?");
+                                    String products = (sellers.get(username)).getProducts();
+                                    System.out.println(products);
+                                } else if (choice == 2) {
+                                    System.out.println("Which product would you like to delete?");
+                                    String products = (sellers.get(username)).getProducts();
+                                    System.out.println(products);
+                                    String unwantedProduct = scan.nextLine();
+                                    (sellers.get(username)).deleteProduct(unwantedProduct);
+                                } else {
+                                    System.out.println("Pick a valid number bitch");
+                                }
                                 break;
                                 //Create store
                                 case 3:

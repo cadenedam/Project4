@@ -1,1 +1,2 @@
-cadenedam;beststore;bestproduct;it's the best;7;69.69
+cadenedam;newstore;newest product;balls balls balls balls;22;2.07
+cadenedam;cooleststore;dog toy;it is a dog toy;2;1000000.0
