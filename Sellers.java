@@ -23,11 +23,15 @@ public class Sellers {
         String sellerStores = "";
         BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
         String line = br.readLine();
+        int counter = 0;
 
         while (line != null) {
             String[] splitLine = line.split(";");
-            if (splitLine[0].equals(username)) {
-                sellerStores = sellerStores + splitLine[1] + ", ";
+            if (splitLine[0].equals(username) && counter > 0) {
+                sellerStores = sellerStores + ", " + splitLine[1];
+            } else if (splitLine[0].equals(username)) {
+                sellerStores = sellerStores + splitLine[1];
+                counter++;
             }
             line = br.readLine();
         }

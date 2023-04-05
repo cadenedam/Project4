@@ -14,7 +14,6 @@ public class Marketplace {
         populateHashMaps();
         Scanner scan = new Scanner(System.in);
         boolean validUser = true;
-        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
         
         //Makes sure people enter a correct value for this
         do {
@@ -46,67 +45,79 @@ public class Marketplace {
 
             //Seller section
             } else if (user == 2) {
-                System.out.println("Enter username:");
-                String username = scan.nextLine();
-                System.out.println("Enter password:");
-                String password = scan.nextLine();
                 boolean loggedIn = false;
-
-                //User authentication (goes through users.txt file, validates password)
-                String line;
-                try {
-                    line = br.readLine();
-                    while (line != null) {
-                        String[] lineSplit = line.split(";");
-                        if (lineSplit[1].equals(username)) {
-                            if (lineSplit[2].equals(password)) {
-                                loggedIn = true;
-                            }
-                        }
-                        line = br.readLine();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (loggedIn) {
-                    System.out.println("What would you like to do?");
-                    System.out.println("1. Create a product");
-                    System.out.println("2. Edit/Delete a product");
-                    System.out.println("3. Create a store");
-                    System.out.println("4. View stores");
-                    int selection = scan.nextInt();
-                    scan.nextLine();
+                do {
+                    BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                    System.out.println("Enter username:");
+                    String username = scan.nextLine();
+                    System.out.println("Enter password:");
+                    String password = scan.nextLine();
     
-                    switch(selection) {
-                        //Create product
-                        case 1:
-                            System.out.println("What's the name of the product?");
-                            String product = scan.nextLine();
-                            System.out.println("Which store will it go in?");
-                            //print stores
-                            System.out.println("(" + (sellers.get(username)).getStores() + ")" );
-                        break;
-                        //Edit/Delete product
-                        case 2:
-                        break;
-                        //Create store
-                        case 3:
-                            System.out.println("What's the name of the store?");
-                            String storeName = scan.nextLine();
-                            (sellers.get(username)).addStore(storeName);
-                        break;
-                        //View Stores
-                        case 4:
-                            (sellers.get(username)).getStores();
-                        break;
-                        default:
-                        System.out.println("Please enter a valid input");
+                    //User authentication (goes through users.txt file, validates password)
+                    String line;
+                    try {
+                        line = br.readLine();
+                        while (line != null) {
+                            String[] lineSplit = line.split(";");
+                            if (lineSplit[1].equals(username)) {
+                                if (lineSplit[2].equals(password)) {
+                                    loggedIn = true;
+                                }
+                            }
+                            line = br.readLine();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    System.out.println("Login failed!");
-                }
-
+    
+                    if (loggedIn) {
+                        int selection = 0;
+                        do {
+                            System.out.println("What would you like to do?");
+                            System.out.println("1. Create a product");
+                            System.out.println("2. Edit/Delete a product");
+                            System.out.println("3. Create a store");
+                            System.out.println("4. View stores");
+                            System.out.println("5. Logout");
+                            selection = scan.nextInt();
+                            scan.nextLine();
+            
+                            switch(selection) {
+                                //Create product
+                                case 1:
+                                    System.out.println("What's the name of the product?");
+                                    String product = scan.nextLine();
+                                    System.out.println("Which store will it go in?");
+                                    //print stores
+                                    System.out.println("(" + (sellers.get(username)).getStores() + ")" );
+                                break;
+                                //Edit/Delete product
+                                case 2:
+                                break;
+                                //Create store
+                                case 3:
+                                    System.out.println("What's the name of the store?");
+                                    String storeName = scan.nextLine();
+                                    (sellers.get(username)).addStore(storeName);
+                                break;
+                                //View Stores
+                                case 4:
+                                    String allStores = (sellers.get(username)).getStores();
+                                    System.out.println(allStores);
+                                break;
+                                case 5:
+                                System.out.println("Bye!");
+                                break;
+                                default:
+                                System.out.println("Please enter a valid input");
+                            }
+                        } while (selection != 5);
+                        
+                    } else {
+                        System.out.println("Login failed!");
+                    }
+                } while (!loggedIn);
+                
             //User creation system
             } else if (user == 3) {
                 System.out.println("Please enter a username:");
