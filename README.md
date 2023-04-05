@@ -3,9 +3,9 @@
 
 Sam Hall: Statistics
 
-Caden Edam: Market, Customers
+Caden Edam: Market, Sellers
 
-AnnMarie: Sellers
+AnnMarie: Customers
 
 Roshan: Selections
 
