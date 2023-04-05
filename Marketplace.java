@@ -66,8 +66,18 @@ public class Marketplace {
 
                 if (userType == 1) {
                     Customers newCustomer = new Customers(username, password);
+                    try {
+                        addUser("Customer", username, password);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else if (userType == 2) {
                     Sellers newSeller = new Sellers(username, password);
+                    try {
+                        addUser("Seller", username, password);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
 
                 }
@@ -81,5 +91,12 @@ public class Marketplace {
     public String[] printMarket() {
         String[] market = null;
         return market;
+    }
+
+    public static void addUser(String userType, String username, String password) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter("users.txt"), true);
+        pw.append(userType + ";" + username + ";" + password);
+        pw.println();
+        pw.close();
     }
 }
