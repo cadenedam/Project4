@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.*;
 
 public class Marketplace {
+    public static Map <String, Sellers> sellers = new HashMap<String, Sellers>();
+    public static Map <String, Customers> customers = new HashMap<String, Customers>();
 
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
@@ -54,7 +56,6 @@ public class Marketplace {
                         line = br.readLine();
                     }
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
@@ -73,7 +74,7 @@ public class Marketplace {
                             String product = scan.nextLine();
                             System.out.println("Which store will it go in?");
                             //print stores
-                            System.out.println("stores");
+                            System.out.println("(" + (sellers.get(username)).getStores() + ")");
                         break;
                         case 2:
                         break;
@@ -98,14 +99,12 @@ public class Marketplace {
                 scan.nextLine();
 
                 if (userType == 1) {
-                    Customers newCustomer = new Customers(username, password);
                     try {
                         addUser("Customer", username, password);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (userType == 2) {
-                    Sellers newSeller = new Sellers(username, password);
                     try {
                         addUser("Seller", username, password);
                     } catch (IOException e) {
@@ -131,5 +130,11 @@ public class Marketplace {
         pw.write(userType + ";" + username + ";" + password);
         pw.println();
         pw.close();
+
+        if (userType.equals("Seller")) {
+            sellers.put(username, new Sellers(username, password));
+        } else {
+            customers.put(username, new Customers(username, password));
+        }
     }
 }

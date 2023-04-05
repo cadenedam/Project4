@@ -24,4 +24,8 @@ public class Sellers {
         }
         return sellerStores;
     }
+
+    public String getUsername() {
+        return username;
+    }
 }
