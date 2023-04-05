@@ -89,7 +89,20 @@ public class Marketplace {
                                     String product = scan.nextLine();
                                     System.out.println("Which store will it go in?");
                                     //print stores
-                                    System.out.println("(" + (sellers.get(username)).getStores() + ")" );
+                                    System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
+                                    System.out.println("(case sensitive)");
+                                    String productStore = scan.nextLine();
+                                    
+                                    System.out.println("What's the product description?");
+                                    String description = scan.nextLine();
+                                    System.out.println("How many are available?");
+                                    int quantity = scan.nextInt();
+                                    scan.nextLine();
+                                    System.out.println("How much does it cost?");
+                                    double price = scan.nextDouble();
+                                    scan.nextLine();
+
+                                    (sellers.get(username)).addProduct(product, productStore, description, quantity, price);
                                 break;
                                 //Edit/Delete product
                                 case 2:

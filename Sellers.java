@@ -12,6 +12,13 @@ public class Sellers {
         this.password = password;
     }
 
+    public void addProduct(String product, String store, String description, int quantity, double price) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter("products.txt", true), true);
+        pw.write(username + ";" + store + ";" + description + ";" + quantity + ";" + price);
+        pw.println();
+        pw.close();
+    }
+
     public void addStore(String store) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("stores.txt", true), true);
         pw.write(username + ";" + store);
