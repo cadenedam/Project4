@@ -10,7 +10,7 @@ public class Marketplace {
         
         do {
             validUser = true;
-            System.out.println("Welcome to the Marketplace!\nAre you a customer or a seller?\n1. Customer\n2. Seller");
+            System.out.println("Welcome to the Marketplace!\nAre you a customer or a seller?\n1. Customer\n2. Seller\n3. Create Account");
             int user = scan.nextInt();
             scan.nextLine();
 
@@ -55,6 +55,22 @@ public class Marketplace {
                     System.out.println("Please enter a valid input");
                 }
 
+            } else if (user == 3) {
+                System.out.println("Please enter a username:");
+                String username = scan.nextLine();
+                System.out.println("Please enter a password:");
+                String password = scan.nextLine();
+                System.out.println("Are you a...\n1. Customer\n2. Seller");
+                int userType = scan.nextInt();
+                scan.nextLine();
+
+                if (userType == 1) {
+                    Customers newCustomer = new Customers(username, password);
+                } else if (userType == 2) {
+                    Sellers newSeller = new Sellers(username, password);
+                } else {
+
+                }
             } else {
                 System.out.println("That's not a valid input!");
                 validUser = false;

@@ -8,7 +8,20 @@ public class Sellers {
     public String password;
     public ArrayList<String> stores = new ArrayList<String>();
 
+    public Sellers(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String addStore(String store) {
         stores.add(store);
+    }
+
+    public String getStores() {
+        String sellerStores = "";
+        for (int i = 0; i < stores.size(); i++) {
+            sellerStores = sellerStores + stores.get(i) + ", ";
+        }
+        return sellerStores;
     }
 }
