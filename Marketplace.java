@@ -87,10 +87,10 @@ public class Marketplace {
                                 case 1:
                                     System.out.println("What's the name of the product?");
                                     String product = scan.nextLine();
-                                    System.out.println("Which store will it go in?");
+                                    System.out.print("Which store will it go in?");
                                     //print stores
                                     System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
-                                    System.out.println("(case sensitive)");
+                                    System.out.println(" (case sensitive)");
                                     String productStore = scan.nextLine();
                                     
                                     System.out.println("What's the product description?");
@@ -114,6 +114,27 @@ public class Marketplace {
                                     System.out.println("Which product would you like to edit?");
                                     String products = (sellers.get(username)).getProducts();
                                     System.out.println(products);
+                                    String editProduct = scan.nextLine();
+
+                                    System.out.println("What's the name of the product?");
+                                    String newProduct = scan.nextLine();
+                                    System.out.print("Which store will it go in?");
+                                    //print stores
+                                    System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
+                                    System.out.println(" (case sensitive)");
+                                    String newProductStore = scan.nextLine();
+                                    
+                                    System.out.println("What's the product description?");
+                                    String newDescription = scan.nextLine();
+                                    System.out.println("How many are available?");
+                                    int newQuantity = scan.nextInt();
+                                    scan.nextLine();
+                                    System.out.println("How much does it cost?");
+                                    double newPrice = scan.nextDouble();
+                                    scan.nextLine();
+
+                                    (sellers.get(username)).deleteProduct(editProduct);
+                                    (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
                                 } else if (choice == 2) {
                                     System.out.println("Which product would you like to delete?");
                                     String products = (sellers.get(username)).getProducts();
