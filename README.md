@@ -23,7 +23,7 @@ The marketplace listing page will show the store, product name, and price of the
 When items are purchased, the quantity available for all users decreases by the amount being purchased. 
 
 Sellers
-- <s>Sellers can create, edit, or delete products associated with their stores.<s>
+- <strike>Sellers can create, edit, or delete products associated with their stores.<strike>
 - Sellers can view a list of their sales by store, including customer information and revenues from the sale. 
 
 Customers
