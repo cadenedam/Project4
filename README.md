@@ -14,13 +14,13 @@ To do:
 Market
 The marketplace will be a centralized page listing available products for purchase. 
 Products will include the following information: 
-- Name of the product
+- <s>Name of the product
 - The store selling the product. 
 - A description of the product
 - The quantity available for purchase
 - The price
 The marketplace listing page will show the store, product name, and price of the available goods. Customers can select a specific product to be taken to that product's page, which will include a description and the quantity available. 
-When items are purchased, the quantity available for all users decreases by the amount being purchased. 
+When items are purchased, the quantity available for all users decreases by the amount being purchased. </s>
 
 Sellers
 - <s>Sellers can create, edit, or delete products associated with their stores. </s>
