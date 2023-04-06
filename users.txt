@@ -1,1 +1,2 @@
 Seller;cadenedam;password
+Customer;cedam;password

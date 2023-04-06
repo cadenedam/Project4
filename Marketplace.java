@@ -24,23 +24,76 @@ public class Marketplace {
 
             //Customer section, currently just an outline
             if (user == 1) {
+                boolean loggedIn = false;
+                BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                    System.out.println("Enter username:");
+                    String username = scan.nextLine();
+                    System.out.println("Enter password:");
+                    String password = scan.nextLine();
+    
+                    //User authentication (goes through users.txt file, validates password)
+                    String line;
+                    try {
+                        line = br.readLine();
+                        while (line != null) {
+                            String[] lineSplit = line.split(";");
+                            if (lineSplit[1].equals(username)) {
+                                if (lineSplit[2].equals(password)) {
+                                    loggedIn = true;
+                                }
+                            }
+                            line = br.readLine();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 //Add user authentication
-                System.out.println("What would you like to do?");
-                System.out.println("1. View marketplace");
-                System.out.println("2. Search for a product");
-                System.out.println("3. Logout");
-                int selection = scan.nextInt();
-                scan.nextLine();
-
-                switch(selection) {
-                    case 1:
-                    break;
-                    case 2:
-                    break;
-                    case 3:
-                    break;
-                    default:
-                    System.out.println("Please enter a valid input");
+                if (loggedIn) {
+                    System.out.println("What would you like to do?");
+                    System.out.println("1. View marketplace");
+                    System.out.println("2. Search for a product");
+                    System.out.println("3. Logout");
+                    int selection = scan.nextInt();
+                    scan.nextLine();
+    
+                    switch(selection) {
+                        case 1:
+                            ArrayList<String> market = new ArrayList<String>();
+                            market = printMarket();
+                            System.out.println("Market: (product, price, store)\n");
+                            for (int i = 0; i < market.size(); i++) {
+                                System.out.println(market.get(i));
+                            }
+                            System.out.print("\n");
+                            System.out.println("Which product would you like to view? (case sensitive)");
+                            String selectedProduct = scan.nextLine();
+                            String viewProduct = viewProduct(selectedProduct);
+                            System.out.println("\n" + viewProduct);
+                            System.out.println("\nWould you like to purchase this product? (yes/no)");
+                            String purchasing = scan.nextLine();
+                            if (purchasing.equals("yes")) {
+                                System.out.println("How many?");
+                                int quantity = scan.nextInt();
+                                scan.nextLine();
+                                int availableQuantity = checkQuantity(selectedProduct);
+    
+                                if (availableQuantity - quantity > 0) {
+                                    productPurchased(selectedProduct, username, quantity);
+                                } else {
+                                    System.out.println("There aren't that many available!");
+                                }
+                            } else {
+                                System.out.println("balls");
+                            }
+    
+                        break;
+                        case 2:
+                        break;
+                        case 3:
+                        break;
+                        default:
+                        System.out.println("Please enter a valid input");
+                    }
                 }
 
             //Seller section
@@ -202,9 +255,72 @@ public class Marketplace {
     }
 
     //This will eventually print the marketplace for customers
-    public String[] printMarket() {
-        String[] market = null;
+    public static ArrayList<String> printMarket() throws IOException {
+        ArrayList<String> market = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            
+            if (Integer.parseInt(splitLine[4]) > 0) {
+                market.add(splitLine[2] + " | $" + splitLine[5] + " | " + splitLine[1]);
+            }
+            line = br.readLine();
+        }
         return market;
+    }
+
+    public static String viewProduct(String product) throws IOException {
+        String productView = "";
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                productView = splitLine[2] + "\nPrice: $" + splitLine[5] + "\nQuantity Available: " + splitLine[4] + "\nDescription: " + splitLine[3] + "\nStore: " + splitLine[1];
+            }
+            line = br.readLine();
+        }
+        return productView;
+    }
+
+    public static int checkQuantity(String product) throws IOException{
+        int quantity = 0;
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                quantity = Integer.parseInt(splitLine[4]);
+            }
+            line = br.readLine();
+        }
+        return quantity;
+    }
+    
+    public static void productPurchased(String product, String username, int quantity) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        PrintWriter pw = new PrintWriter(new FileWriter("purchased.txt", true), true);
+        String line = br.readLine();
+        int newQuantity = 0;
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                newQuantity = Integer.parseInt(splitLine[4]) - quantity;
+            }
+            if (newQuantity > 0) {
+                (sellers.get(splitLine[0])).deleteProduct(product);
+                (sellers.get(splitLine[0])).addProduct(splitLine[2], splitLine[1], splitLine[3], newQuantity, Double.parseDouble(splitLine[5]));
+                pw.write(username + ";" + product + ";" + splitLine[5] + ";" + splitLine[4]);
+                pw.println();
+                pw.close();
+            }
+            line = br.readLine();
+        }
     }
 
     //Creates new users and adds them to hashmaps
