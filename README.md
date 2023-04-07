@@ -38,8 +38,8 @@ Files
 - Customers can export a file with their purchase history.
 
 Statistics
-- Sellers can view a dashboard that lists statistics for each of their stores.
-- Data will include a list of customers with the number of items that they have purchased and a list of products with the number of sales. 
+- <s> Sellers can view a dashboard that lists statistics for each of their stores.
+- Data will include a list of customers with the number of items that they have purchased and a list of products with the number of sales </s>. 
 - Sellers can choose to sort the dashboard.
 - Customers can view a dashboard with store and seller information.
 - Data will include a list of stores by number of products sold and a list of stores by the products purchased by that particular customer. 
