@@ -47,7 +47,7 @@ public class Marketplace {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                //Add user authentication
+                //Customer homepage
                 if (loggedIn) {
                     System.out.println("What would you like to do?");
                     System.out.println("1. View marketplace");
@@ -57,6 +57,7 @@ public class Marketplace {
                     scan.nextLine();
     
                     switch(selection) {
+                        //View marketplace
                         case 1:
                             ArrayList<String> market = new ArrayList<String>();
                             market = printMarket();
@@ -87,9 +88,12 @@ public class Marketplace {
                             }
     
                         break;
+                        //Search for product
                         case 2:
                         break;
+                        //Logout
                         case 3:
+                        System.out.println("Bye!");
                         break;
                         default:
                         System.out.println("Please enter a valid input");
@@ -125,13 +129,15 @@ public class Marketplace {
     
                     if (loggedIn) {
                         int selection = 0;
+                        //Seller homepage
                         do {
                             System.out.println("What would you like to do?");
                             System.out.println("1. Create a product");
                             System.out.println("2. Edit/Delete a product");
                             System.out.println("3. Create a store");
                             System.out.println("4. View stores");
-                            System.out.println("5. Logout");
+                            System.out.println("5. View Seller Dashboard");
+                            System.out.println("6. Logout");
                             selection = scan.nextInt();
                             scan.nextLine();
             
@@ -146,6 +152,7 @@ public class Marketplace {
                                     System.out.println(" (case sensitive)");
                                     String productStore = scan.nextLine();
                                     
+                                    //Get all info for product, add product
                                     System.out.println("What's the product description?");
                                     String description = scan.nextLine();
                                     System.out.println("How many are available?");
@@ -163,6 +170,7 @@ public class Marketplace {
                                 int choice = scan.nextInt();
                                 scan.nextLine();
 
+                                //Edit product (deletes, then adds with changes)
                                 if (choice == 1) {
                                     System.out.println("Which product would you like to edit?");
                                     String products = (sellers.get(username)).getProducts();
@@ -188,6 +196,7 @@ public class Marketplace {
 
                                     (sellers.get(username)).deleteProduct(editProduct);
                                     (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
+                                //Deletes product
                                 } else if (choice == 2) {
                                     System.out.println("Which product would you like to delete?");
                                     String products = (sellers.get(username)).getProducts();
@@ -209,7 +218,13 @@ public class Marketplace {
                                     String allStores = (sellers.get(username)).getStores();
                                     System.out.println(allStores);
                                 break;
+                                //View Seller Dashboard
                                 case 5:
+                                SellersDashboard newDash = new SellersDashboard(username, password);
+                                newDash.printSellersDashboard();
+                                break;
+                                //Logout
+                                case 6:
                                 System.out.println("Bye!");
                                 break;
                                 default:
@@ -223,9 +238,28 @@ public class Marketplace {
                 } while (!loggedIn);
                 
             //User creation system
+            //Add new user authentication?
             } else if (user == 3) {
-                System.out.println("Please enter a username:");
-                String username = scan.nextLine();
+                boolean userTaken;
+                String username;
+                do {
+                    System.out.println("Please enter a username:");
+                    username = scan.nextLine();
+                    BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                    String line = br.readLine();
+                    userTaken = false;
+    
+                    //Makes sure username is not taken
+                    while (line != null) {
+                        String[] splitLine = line.split(";");
+                        if (splitLine[1].equals(username)) {
+                            userTaken = true;
+                            System.out.println("This username is taken!");
+                        }
+                        line = br.readLine();
+                    }
+                } while (userTaken);
+                
                 System.out.println("Please enter a password:");
                 String password = scan.nextLine();
                 System.out.println("Are you a...\n1. Customer\n2. Seller");
@@ -245,7 +279,7 @@ public class Marketplace {
                         e.printStackTrace();
                     }
                 } else {
-
+                    System.out.println("Please enter a valid number");
                 }
             } else {
                 System.out.println("That's not a valid input!");
