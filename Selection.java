@@ -8,7 +8,7 @@ public class Selection {
     private String filename;
     private List<String> products;
 
-    private Customers customers = new Customers(username, password);
+    //private Customers customers = new Customers(username, password);
     //these values are always null?
 
 

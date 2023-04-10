@@ -1,2 +1,3 @@
 Seller;cadenedam;password
 Customer;cedam;password
+Seller;rneupane;here_we_go
