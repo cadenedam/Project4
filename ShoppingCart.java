@@ -2,6 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ShoppingCart
+ *
+ * ShoppingCart is the interface in which a customer can store and view products to check out.
+ * It creates a file for the certain user to act as storage to be saved. This file can be read
+ * from as to add products and delete them.
+ */
+
 public class ShoppingCart {
 
     public String username;
