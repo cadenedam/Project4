@@ -18,7 +18,11 @@ public class Marketplace {
         //Makes sure people enter a correct value for this
         do {
             validUser = true;
-            System.out.println("Welcome to the Marketplace!\nAre you a customer or a seller?\n1. Customer\n2. Seller\n3. Create Account");
+            System.out.println("Welcome to the Marketplace!" +
+                    "\nAre you a customer or a seller?" +
+                    "\n1. Customer" +
+                    "\n2. Seller" +
+                    "\n3. Create Account");
             int user = scan.nextInt();
             scan.nextLine();
 
@@ -85,12 +89,16 @@ public class Marketplace {
                                 }
                             } else {
                                 System.out.println("balls");
+                                //should we add more here?
+                                //Can't we just go back and ask them what they want to do?
                             }
     
                         break;
                         //Search for product
                         case 2:
+                            //implementation for when searching for a product needs to be added
                         break;
+
                         //Logout
                         case 3:
                         System.out.println("Bye!");

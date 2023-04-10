@@ -12,7 +12,8 @@ public class Sellers {
         this.password = password;
     }
 
-    public void addProduct(String product, String store, String description, int quantity, double price) throws IOException {
+    public void addProduct(String product, String store, String description,
+                           int quantity, double price) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("products.txt", true), true);
         pw.write(username + ";" + store + ";" + product + ";" + description + ";" + quantity + ";" + price);
         pw.println();
@@ -31,7 +32,9 @@ public class Sellers {
                 useless = useless + line;
             } else {
                 allProducts.add(line);
-            }
+            } //I don't understand why we need to add the product to our products
+            //file if it doesn't already exist, in this case should we just tell the user
+            //that the mentioned product doesn't exist?
             line = br.readLine();
         }
 
@@ -48,6 +51,9 @@ public class Sellers {
         BufferedReader br = new BufferedReader(new FileReader("products.txt"));
         String line = br.readLine();
         int counter = 0;
+        //I don't fully understand why this counter was added, when the while loop
+        //first starts the else condition will always be hit. What is the point in looking
+        //at the counter value?
 
         while (line != null) {
             String[] splitLine = line.split(";");
@@ -74,6 +80,10 @@ public class Sellers {
         BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
         String line = br.readLine();
         int counter = 0;
+
+        //When the while loop first starts the else condition
+        // will always be hit. What is the point in looking
+        //at the counter value?
 
         while (line != null) {
             String[] splitLine = line.split(";");
