@@ -4,10 +4,12 @@
 3. The program will now allow you to test all features by accepting input through the terminal
 
 <b>Who submitted where:</b>
-Vocareum:
-Brightspace (report):
+
+Vocareum: Caden Edam
+Brightspace (report): Sam Hall
 
 <b>Class descriptions:</b>
+
 Marketplace.java: This class contains the main method for the program. It allows the users to interact with the marketplace, and is where all other classes are implemented and tested. Testing done to make sure it works has been constantly running the main method to make sure there are no errors, it outputs the correct outputs, writes and reads files correctly, etc. 
 
 CustomerDashboard.java: This class creates a "dashboard" that shows customers the products they've bought and the stores they've bought from. Testing is done in marketplace.java, where it's methods are called. It's related to the customers class because it takes info from the customer's purchase history in order to show them their dashboard.
