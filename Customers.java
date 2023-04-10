@@ -12,7 +12,7 @@ import java.io.*;
  * Customers can purchase items from the product page and
  * review a history of their previously purchased items.
  */
-public class Customers {
+public class Customers extends Selection {
     public String username;
     public String password;
 

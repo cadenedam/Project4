@@ -7,6 +7,11 @@ public class Selection {
     private String password;
     private String filename;
     private List<String> products;
+
+    private Customers customers = new Customers(username, password);
+    //these values are always null?
+
+
     File fileProducts = new File("products.txt");
     File filePurchased = new File("purchases.txt");
 
@@ -16,10 +21,10 @@ public class Selection {
 //    }
     //the constructor above may not be necessary
 
-    public ArrayList<String> readFile(String fileName) throws FileNotFoundException {
+    public ArrayList<String> readFile(String filename) throws FileNotFoundException {
         ArrayList<String> list = new ArrayList<>();
         try {
-            FileReader fr = new FileReader(fileName);
+            FileReader fr = new FileReader(filename);
             BufferedReader bfr = new BufferedReader(fr);
             String line = bfr.readLine();
             while (line != null) {
@@ -37,7 +42,7 @@ public class Selection {
 
     //allows the seller to export products for their store
 
-    public ArrayList<String> writeProductsFile(Scanner in) throws IOException {
+    public ArrayList<String> writeProductsFile(String filename) throws IOException {
         ArrayList<String> list = new ArrayList<>();
         BufferedWriter productListWriter = new BufferedWriter(new FileWriter(fileProducts));
         String newList = "";
@@ -61,7 +66,6 @@ public class Selection {
     }
 
     //allows the customer to export a file with their purchase history
-
 
     public ArrayList<String> writePurchasedFile(String username,String fileName) throws IOException {
         ArrayList<String> list = new ArrayList<>();
@@ -172,8 +176,6 @@ public class Selection {
 
             //close the buffered reader
             br.close();
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

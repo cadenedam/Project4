@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class Sellers {
+public class Sellers extends Selection{
 
     public String username;
     public String password;
