@@ -39,10 +39,10 @@ Files
 
 Statistics
 - <s> Sellers can view a dashboard that lists statistics for each of their stores.
-- Data will include a list of customers with the number of items that they have purchased and a list of products with the number of sales </s>. 
+- Data will include a list of customers with the number of items that they have purchased and a list of products with the number of sales. </s> 
 - Sellers can choose to sort the dashboard.
-- Customers can view a dashboard with store and seller information.
-- Data will include a list of stores by number of products sold and a list of stores by the products purchased by that particular customer. 
+- <s> Customers can view a dashboard with store and seller information.
+- Data will include a list of stores by number of products sold and a list of stores by the products purchased by that particular customer. </s>
 - Customers can choose to sort the dashboard.
 - <s>Shopping cart
 - Customers can add products from different stores to a shopping cart to purchase all at once, and can remove any product if they choose to do so. The shopping cart is preserved between sessions, so a customer may choose to sign out and return to make the purchase later.  
