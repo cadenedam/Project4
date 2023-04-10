@@ -179,6 +179,21 @@ public class Customers {
         }
         return newMarket;
     }
+    
+    // view overall marketplace
+
+    public ArrayList<String> productsForSale() throws IOException {
+        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
+        String line = r.readLine();
+        ArrayList<String> arrOfProducts = null;
+        while (line != null) {
+            arrOfProducts.add(line);
+            line = r.readLine();
+        }
+        r.close();
+        return arrOfProducts;
+    }
+    
     // returns customer's username
     public String getUsername() {
         return username;
