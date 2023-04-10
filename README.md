@@ -1,49 +1,23 @@
-# Project4
+<b>How to compile and run:</b>
+1. Clone code into preferred IDE (optional for Project 4, it should also run in vocareum)
+2. Go to Marketplace.java and hit the run button if in IDE, otherwise type [java Marketplace] into vocareum's terminal
+3. The program will now allow you to test all features by accepting input through the terminal
 
+<b>Who submitted where:</b>
+Vocareum:
+Brightspace (report):
 
-Sam Hall: Statistics
+<b>Class descriptions:</b>
+Marketplace.java: This class contains the main method for the program. It allows the users to interact with the marketplace, and is where all other classes are implemented and tested. Testing done to make sure it works has been constantly running the main method to make sure there are no errors, it outputs the correct outputs, writes and reads files correctly, etc. 
 
-Caden Edam: Market, Sellers
+CustomerDashboard.java: This class creates a "dashboard" that shows customers the products they've bought and the stores they've bought from. Testing is done in marketplace.java, where it's methods are called. It's related to the customers class because it takes info from the customer's purchase history in order to show them their dashboard.
 
-AnnMarie: Customers
+Customers.java: This class contains all the information for each individual customer. Testing is done by creating new instances of the class in the marketplace main method, and calling it's methods throughout marketplace.java in order to get information to the user. It's used mostly in the marketplace.java class, however it's also heavily related to customerdashboard since that's where the dashboard class gets all the info from, and shoppingcart.java, since that keeps track of what they're planning on purchasing.
 
-Roshan: Selections
+Selection.java: This class allows the user to import and export files, whether it be their purchases, their stores, or anything else that's stored in files. Testing for this class is also done in marketplace.java, since that's where it's methods are called. It's related to pretty much every other class, since it's main purpose is to export or import the information that's used/created by all other classes.
 
-To do:
+Sellers.java: This class contains all the information for each seller. Testing is done by creating new sellers in marketplace.java when users create seller accounts, and then try to create stores, products, view their dashboard, etc. It's related to sellerdashboard, since sellerdashboard uses it's information to display it all to the user. 
 
-Market
-The marketplace will be a centralized page listing available products for purchase. 
-Products will include the following information: 
-- <s>Name of the product
-- The store selling the product. 
-- A description of the product
-- The quantity available for purchase
-- The price
-The marketplace listing page will show the store, product name, and price of the available goods. Customers can select a specific product to be taken to that product's page, which will include a description and the quantity available. 
-When items are purchased, the quantity available for all users decreases by the amount being purchased. </s>
+SellersDashboard.java: This class displays statistics and information to the seller. It's tested in the main method of marketplace.java when a seller chooses the option to view their seller dashboard. It's related to the sellers class, since it uses it's information to create a dashboard for the user. 
 
-Sellers
-- <s>Sellers can create, edit, or delete products associated with their stores. </s>
-- Sellers can view a list of their sales by store, including customer information and revenues from the sale. 
-
-Customers
-- Customers can view the overall marketplace listing products for sale, search for specific products using terms that match the name, store, or description, and sort - the marketplace on price or quantity available. 
-- Customers can purchase items from the product page and review a history of their previously purchased items. 
-
-Selections
-Files
-- All file imports must occur as a prompt to enter the file path.  
-- Sellers can import or export products for their stores using a csv file. 
-- All product details should be included, with one row per product. 
-- Customers can export a file with their purchase history.
-
-Statistics
-- <s> Sellers can view a dashboard that lists statistics for each of their stores.
-- Data will include a list of customers with the number of items that they have purchased and a list of products with the number of sales. </s> 
-- Sellers can choose to sort the dashboard.
-- <s> Customers can view a dashboard with store and seller information.
-- Data will include a list of stores by number of products sold and a list of stores by the products purchased by that particular customer. </s>
-- Customers can choose to sort the dashboard.
-- <s>Shopping cart
-- Customers can add products from different stores to a shopping cart to purchase all at once, and can remove any product if they choose to do so. The shopping cart is preserved between sessions, so a customer may choose to sign out and return to make the purchase later.  
-- Sellers can view the number of products currently in customer shopping carts, along with the store and details associated with the products. </s>
+ShoppingCart.java: This class keeps track of the products that a customer is planning on purchasing. It's tested in the main method of marketplace.java, when a customer adds a product to their shopping cart. It's related to the customers class, since it's keeping track of all the products they want, which could be called upon in the customerdashboard class as well.
