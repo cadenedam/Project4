@@ -1,6 +1,14 @@
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * CustomerDashboard
+ *
+ * CustomerDahsboard is the interface in which a customer can view much of the data involving:
+ * Stores - data including the list of stores and how many products are for sale
+ * Products Bought - data including the list of products and the store bought by the customer
+ */
+
 public class CustomerDashboard {
 
     public String username;
@@ -13,7 +21,7 @@ public class CustomerDashboard {
 
     public void viewDashboard(String [] storesList, String [] productsList, String [] productsBought) {
         //storesList - each store index corresponds to the productList index
-        //productsList - list of products for the store/index, separated by "," plz (no space)
+        //productsList - list of products for the store/index
         //productsBought - index separated list of particular products bought by customer (from customers.java)
 
         //stores by number of products sold (get from sellers.java)
