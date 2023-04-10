@@ -8,7 +8,7 @@ public class SellersDashboard {
     public String [] products;
     public String [] sales;
 
-    public SellersDashboard(String[] stores, String[] storeCustomers, String[] itemsSold, String [] products, String [] sales) {
+    public SellersDashboard(String[] stores, String[] storeCustomers, String[] itemsSold, String[] products, String[] sales) {
         this.stores = stores;
         this.storeCustomers = storeCustomers;
         this.itemsSold = itemsSold;

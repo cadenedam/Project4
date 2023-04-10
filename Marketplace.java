@@ -228,8 +228,14 @@ public class Marketplace {
                                 break;
                                 //View Seller Dashboard
                                 case 5:
-                                SellersDashboard newDash = new SellersDashboard(username, password);
-                                newDash.printSellersDashboard();
+                                String[] stores = ((sellers.get(username)).getStores()).split(", ");
+                                String[] storeCustomers = 
+                                String[] itemsSold =
+                                String[] products = 
+                                String[] sales = 
+                                SellersDashboard newDash = new SellersDashboard
+                                (String[] stores, String[] storeCustomers, String[] itemsSold, String [] products, String [] sales);
+                                newDash.viewDashboard();
                                 break;
                                 //Logout
                                 case 6:
