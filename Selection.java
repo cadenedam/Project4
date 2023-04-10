@@ -3,8 +3,8 @@ import java.util.*;
 
 public class Selection {
 
-    public String username;
-    public String password;
+    private String username;
+    private String password;
     private String filename;
     private List<String> products;
     File fileProducts = new File("products.txt");
@@ -62,21 +62,31 @@ public class Selection {
 
     //allows the customer to export a file with their purchase history
 
-    public ArrayList<String> writePurchasedFile(Scanner in) throws IOException {
+
+    public ArrayList<String> writePurchasedFile(String username,String fileName) throws IOException {
         ArrayList<String> list = new ArrayList<>();
-        BufferedWriter purchaseListWriter = new BufferedWriter(new FileWriter(filePurchased));
+        BufferedWriter purchaseListWriter = new BufferedWriter(new FileWriter(filename));
         String newList = "";
         purchaseListWriter.write(newList);
-        purchaseListWriter.close();
         try {
-            FileReader fr = new FileReader(filePurchased);
+            FileReader fr = new FileReader(fileName);
             BufferedReader bfr = new BufferedReader(fr);
             String line = bfr.readLine();
             while (line != null) {
                 list.add(line);
                 line = bfr.readLine();
+                if (Objects.equals(list.get(0), "Customer")) {
+                    ArrayList<String> a = readFile("products.txt");
+                    if (a.get(0).equals(username)) {
+                        purchaseListWriter.write(line);
+                    }
+                    //I need to add some additional conditions that display the rows of products
+                    //that customer has bought
+                    //This is a tentative solution
+                }
             }
             bfr.close();
+            purchaseListWriter.close();
         } catch (FileNotFoundException e) {
             throw e;
         } catch (IOException e) {
