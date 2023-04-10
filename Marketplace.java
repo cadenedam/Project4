@@ -52,104 +52,107 @@ public class Marketplace {
                     }
                 //Customer homepage
                 if (loggedIn) {
-                    System.out.println("What would you like to do?");
-                    System.out.println("1. View marketplace");
-                    System.out.println("2. Search for a product");
-                    System.out.println("3. Review purchase history");
-                    System.out.println("4. Logout");
-                    int selection = scan.nextInt();
-                    scan.nextLine();
-    
-                    switch(selection) {
-                        //View marketplace
-                        case 1:
-                            ArrayList<String> market = new ArrayList<String>();
-                            market = printMarket();
-                            System.out.println("Market: (product, price, store)\n");
-                            for (int i = 0; i < market.size(); i++) {
-                                System.out.println(market.get(i));
-                            }
-                            System.out.print("\n");
-                            System.out.println("Would you like to sort the market at all? (yes/no)");
-                            String sort = scan.nextLine();
-                            sort = sort.toLowerCase();
-                            if (sort.equals("yes")) {
-                                System.out.println("Would you like to sort by\n1. Price\n2. Quantity available");
-                                int sorting = scan.nextInt();
-                                scan.nextLine();
+                    int selection = 0;
+                    do {
+                        System.out.println("What would you like to do?");
+                        System.out.println("1. View marketplace");
+                        System.out.println("2. Search for a product");
+                        System.out.println("3. Review purchase history");
+                        System.out.println("4. Logout");
+                        selection = scan.nextInt();
+                        scan.nextLine();
 
-                                if (sorting == 1) {
-                                    ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice();
-                                    for (int i = 0; i < sortedMarket.size(); i++) {
-                                        System.out.println(sortedMarket.get(i));
+                        switch (selection) {
+                            //View marketplace
+                            case 1:
+                                ArrayList<String> market = new ArrayList<String>();
+                                market = printMarket();
+                                System.out.println("Market: (product, price, store)\n");
+                                for (int i = 0; i < market.size(); i++) {
+                                    System.out.println(market.get(i));
+                                }
+                                System.out.print("\n");
+                                System.out.println("Would you like to sort the market at all? (yes/no)");
+                                String sort = scan.nextLine();
+                                sort = sort.toLowerCase();
+                                if (sort.equals("yes")) {
+                                    System.out.println("Would you like to sort by\n1. Price\n2. Quantity available");
+                                    int sorting = scan.nextInt();
+                                    scan.nextLine();
+
+                                    if (sorting == 1) {
+                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice();
+                                        for (int i = 0; i < sortedMarket.size(); i++) {
+                                            System.out.println(sortedMarket.get(i));
+                                        }
+                                    } else if (sorting == 2) {
+                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity();
+                                        for (int i = 0; i < sortedMarket.size(); i++) {
+                                            System.out.println(sortedMarket.get(i));
+                                        }
+                                    } else {
+                                        System.out.println("That is not a valid choice!");
                                     }
-                                } else if (sorting == 2) {
-                                    ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity();
-                                    for (int i = 0; i < sortedMarket.size(); i++) {
-                                        System.out.println(sortedMarket.get(i));
+                                }
+                                System.out.println("Which product would you like to view? (case sensitive)");
+                                String selectedProduct = scan.nextLine();
+                                String viewProduct = viewProduct(selectedProduct);
+                                System.out.println("\n" + viewProduct);
+                                System.out.println("\nWould you like to purchase this product? (yes/no)");
+                                String purchasing = scan.nextLine();
+                                if (purchasing.equals("yes")) {
+                                    System.out.println("How many?");
+                                    int quantity = scan.nextInt();
+                                    scan.nextLine();
+                                    int availableQuantity = checkQuantity(selectedProduct);
+
+                                    if (availableQuantity - quantity > 0) {
+                                        productPurchased(selectedProduct, username, quantity);
+                                        double price = checkPrice(selectedProduct);
+                                        String store = checkStore(selectedProduct);
+                                        String description = checkDescription(selectedProduct);
+                                        (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
+                                    } else {
+                                        System.out.println("There aren't that many available!");
                                     }
                                 } else {
-                                    System.out.println("That is not a valid choice!");
+                                    System.out.println("Ok!");
                                 }
-                            }
-                            System.out.println("Which product would you like to view? (case sensitive)");
-                            String selectedProduct = scan.nextLine();
-                            String viewProduct = viewProduct(selectedProduct);
-                            System.out.println("\n" + viewProduct);
-                            System.out.println("\nWould you like to purchase this product? (yes/no)");
-                            String purchasing = scan.nextLine();
-                            if (purchasing.equals("yes")) {
-                                System.out.println("How many?");
-                                int quantity = scan.nextInt();
+
+                                break;
+                            //Search for product
+                            case 2:
+                                System.out.println("Do you want to search by\n1.Product name\n2. Store name\n3. Product description");
+                                int choice = scan.nextInt();
                                 scan.nextLine();
-                                int availableQuantity = checkQuantity(selectedProduct);
-    
-                                if (availableQuantity - quantity > 0) {
-                                    productPurchased(selectedProduct, username, quantity);
-                                    double price = checkPrice(selectedProduct);
-                                    String store = checkStore(selectedProduct);
-                                    String description = checkDescription(selectedProduct);
-                                    (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
+                                if (choice == 1) {
+                                    System.out.println("Please type the name of the product you're searching for:");
+                                    String product = scan.nextLine();
+                                    (customers.get(username)).searchProductName(product);
+                                } else if (choice == 2) {
+                                    System.out.println("Please type the name of the store you're searching for:");
+                                    String store = scan.nextLine();
+                                    (customers.get(username)).searchProductStore(store);
+                                } else if (choice == 3) {
+                                    System.out.println("Please type part of a description you're searching for:");
+                                    String description = scan.nextLine();
+                                    (customers.get(username)).searchProductDescription(description);
                                 } else {
-                                    System.out.println("There aren't that many available!");
+                                    System.out.println("That's not a valid option!");
                                 }
-                            } else {
-                                System.out.println("Ok!");
-                            }
-    
-                        break;
-                        //Search for product
-                        case 2:
-                            System.out.println("Do you want to search by\n1.Product name\n2. Store name\n3. Product description");
-                            int choice = scan.nextInt();
-                            scan.nextLine();
-                            if (choice == 1) {
-                                System.out.println("Please type the name of the product you're searching for:");
-                                String product = scan.nextLine();
-                                (customers.get(username)).searchProductName(product);
-                            } else if (choice == 2) {
-                                System.out.println("Please type the name of the store you're searching for:");
-                                String store = scan.nextLine();
-                                (customers.get(username)).searchProductStore(store);
-                            } else if (choice == 3) {
-                                System.out.println("Please type part of a description you're searching for:");
-                                String description = scan.nextLine();
-                                (customers.get(username)).searchProductDescription(description);
-                            } else {
-                                System.out.println("That's not a valid option!");
-                            }
-                        break;
-                        case 3:
-                            String purchaseHistory = (customers.get(username)).getPurchaseHistory();
-                            System.out.println(purchaseHistory);
-                        break;
-                        //Logout
-                        case 4:
-                        System.out.println("Bye!");
-                        break;
-                        default:
-                        System.out.println("Please enter a valid input");
-                    }
+                                break;
+                            case 3:
+                                String purchaseHistory = (customers.get(username)).getPurchaseHistory();
+                                System.out.println(purchaseHistory);
+                                break;
+                            //Logout
+                            case 4:
+                                System.out.println("Bye!");
+                                break;
+                            default:
+                                System.out.println("Please enter a valid input");
+                        }
+                    } while (selection != 4);
                 }
 
             //Seller section

@@ -1,4 +1,0 @@
-cadenedam;cooleststore;dog toy;it is a dog toy;2;1000000.0
-cadenedam;cooleststore;dog toy;it is a dog toy;20;1000000.0
-cadenedam;beststore;balls;balls;3;7.09
-rneupane;Dick's;tennis;balls of tennis;56;3.45
