@@ -3,7 +3,6 @@ import java.net.*;
 import java.util.*;
 
 public class Marketplace {
-    //Hashmaps are temporarily fucked up cuz im not good at them
     //Creates hashmaps for sellers and customers.
     //Basically think of an ArrayList, where each element has a title (the string)
     //And each title is associated with a sellers/customers account
@@ -26,7 +25,7 @@ public class Marketplace {
             int user = scan.nextInt();
             scan.nextLine();
 
-            //Customer section, currently just an outline
+            //Customer section
             if (user == 1) {
                 boolean loggedIn = false;
                 BufferedReader br = new BufferedReader(new FileReader("users.txt"));
@@ -56,7 +55,8 @@ public class Marketplace {
                     System.out.println("What would you like to do?");
                     System.out.println("1. View marketplace");
                     System.out.println("2. Search for a product");
-                    System.out.println("3. Logout");
+                    System.out.println("3. Review purchase history");
+                    System.out.println("4. Logout");
                     int selection = scan.nextInt();
                     scan.nextLine();
     
@@ -106,6 +106,10 @@ public class Marketplace {
     
                                 if (availableQuantity - quantity > 0) {
                                     productPurchased(selectedProduct, username, quantity);
+                                    double price = checkPrice(selectedProduct);
+                                    String store = checkStore(selectedProduct);
+                                    String description = checkDescription(selectedProduct);
+                                    (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
                                 } else {
                                     System.out.println("There aren't that many available!");
                                 }
@@ -135,9 +139,12 @@ public class Marketplace {
                                 System.out.println("That's not a valid option!");
                             }
                         break;
-
-                        //Logout
                         case 3:
+                            String purchaseHistory = (customers.get(username)).getPurchaseHistory();
+                            System.out.println(purchaseHistory);
+                        break;
+                        //Logout
+                        case 4:
                         System.out.println("Bye!");
                         break;
                         default:
@@ -249,7 +256,7 @@ public class Marketplace {
                                     String unwantedProduct = scan.nextLine();
                                     (sellers.get(username)).deleteProduct(unwantedProduct);
                                 } else {
-                                    System.out.println("Pick a valid number bitch");
+                                    System.out.println("Pick a valid number please");
                                 }
                                 break;
                                 //Create store
@@ -265,14 +272,6 @@ public class Marketplace {
                                 break;
                                 //View Seller Dashboard
                                 case 5:
-                                String[] stores = ((sellers.get(username)).getStores()).split(", ");
-                                String[] storeCustomers = 
-                                String[] itemsSold =
-                                String[] products = 
-                                String[] sales = 
-                                SellersDashboard newDash = new SellersDashboard
-                                (String[] stores, String[] storeCustomers, String[] itemsSold, String [] products, String [] sales);
-                                newDash.viewDashboard();
                                 break;
                                 //Logout
                                 case 6:
@@ -281,7 +280,7 @@ public class Marketplace {
                                 default:
                                 System.out.println("Please enter a valid input");
                             }
-                        } while (selection != 5);
+                        } while (selection != 6);
                         
                     } else {
                         System.out.println("Login failed!");
@@ -385,7 +384,51 @@ public class Marketplace {
         }
         return quantity;
     }
-    
+
+    public static double checkPrice(String product) throws IOException{
+        double price = 0;
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                price = Double.parseDouble(splitLine[5]);
+            }
+            line = br.readLine();
+        }
+        return price;
+    }
+
+    public static String checkStore(String product) throws IOException{
+        String store = "";
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                store = splitLine[1];
+            }
+            line = br.readLine();
+        }
+        return store;
+    }
+
+    public static String checkDescription(String product) throws IOException{
+        String description = "";
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[2].equals(product)) {
+                description = splitLine[3];
+            }
+            line = br.readLine();
+        }
+        return description;
+    }
     public static void productPurchased(String product, String username, int quantity) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("products.txt"));
         PrintWriter pw = new PrintWriter(new FileWriter("purchased.txt", true), true);
