@@ -70,6 +70,28 @@ public class Marketplace {
                                 System.out.println(market.get(i));
                             }
                             System.out.print("\n");
+                            System.out.println("Would you like to sort the market at all? (yes/no)");
+                            String sort = scan.nextLine();
+                            sort = sort.toLowerCase();
+                            if (sort.equals("yes")) {
+                                System.out.println("Would you like to sort by\n1. Price\n2. Quantity available");
+                                int sorting = scan.nextInt();
+                                scan.nextLine();
+
+                                if (sorting == 1) {
+                                    ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice();
+                                    for (int i = 0; i < sortedMarket.size(); i++) {
+                                        System.out.println(sortedMarket.get(i));
+                                    }
+                                } else if (sorting == 2) {
+                                    ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity();
+                                    for (int i = 0; i < sortedMarket.size(); i++) {
+                                        System.out.println(sortedMarket.get(i));
+                                    }
+                                } else {
+                                    System.out.println("That is not a valid choice!");
+                                }
+                            }
                             System.out.println("Which product would you like to view? (case sensitive)");
                             String selectedProduct = scan.nextLine();
                             String viewProduct = viewProduct(selectedProduct);
@@ -88,15 +110,30 @@ public class Marketplace {
                                     System.out.println("There aren't that many available!");
                                 }
                             } else {
-                                System.out.println("balls");
-                                //should we add more here?
-                                //Can't we just go back and ask them what they want to do?
+                                System.out.println("Ok!");
                             }
     
                         break;
                         //Search for product
                         case 2:
-                            //implementation for when searching for a product needs to be added
+                            System.out.println("Do you want to search by\n1.Product name\n2. Store name\n3. Product description");
+                            int choice = scan.nextInt();
+                            scan.nextLine();
+                            if (choice == 1) {
+                                System.out.println("Please type the name of the product you're searching for:");
+                                String product = scan.nextLine();
+                                (customers.get(username)).searchProductName(product);
+                            } else if (choice == 2) {
+                                System.out.println("Please type the name of the store you're searching for:");
+                                String store = scan.nextLine();
+                                (customers.get(username)).searchProductStore(store);
+                            } else if (choice == 3) {
+                                System.out.println("Please type part of a description you're searching for:");
+                                String description = scan.nextLine();
+                                (customers.get(username)).searchProductDescription(description);
+                            } else {
+                                System.out.println("That's not a valid option!");
+                            }
                         break;
 
                         //Logout
