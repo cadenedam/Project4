@@ -1,51 +1,51 @@
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import static java.lang.Integer.parseInt;
 
 /**
- * SellersDahsboard
+ * SellersDashboard
  *
- * SellersDahsboard is the interface in which a seller can view much of the data involving each of their stores including:
+ * SellersDashboard is the interface in which a seller can view much of the data involving each of their stores including:
  * Customer Data - data including the list of customers who have made a purchase at the store, including the quantity of purchases
  * Product Data - data including the list of products for each store, as well as the quantity of items for each store
  */
 
 public class SellersDashboard {
     public String [] stores;
-    public String [] storeCustomers;
-    public String [] itemsSold;
-    public String [] products;
-    public String [] sales;
 
-    public SellersDashboard(String[] stores, String[] storeCustomers, String[] itemsSold, String[] products, String[] sales) {
+    public SellersDashboard(String[] stores) {
         this.stores = stores;
-        this.storeCustomers = storeCustomers;
-        this.itemsSold = itemsSold;
-        this.products = products;
-        this.sales = sales;
     }
 
-    //stores - each store index corresponds to the storeCustomers index
-    //storeCustomers - list of customers for the store/index
-    //itemsSold - index still corresponds to each store - list of number of items bought by customer
-    //products - index still corresponds to each store - list of products by that store
-    //sales - index still corresponds to each store - list of number of sales for each product
+    //stores - each store index corresponds to a new store
 
-    public void viewDashboard() {
+    public void viewDashboard() throws IOException {
         System.out.println("Dashboard:" + "\n");
         for (int i = 0; i < stores.length; i++) {
-            //Each Store
             System.out.println("Store:" + stores[i] + "\n");
-            
-            //Customer Data
-            System.out.println("Customer Data");
-            List<String> customerList = Arrays.asList(storeCustomers[i].split(","));
+
+            BufferedReader br = new BufferedReader(new FileReader("purchased.txt"));
+            String line;
+            String[] splitLine;
+            List<String> customerList = new ArrayList<>();
+            List<String> itemsSold = new ArrayList<>();
+            List<String> products  = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                splitLine = line.split(";");
+                if (splitLine[4].equals(stores[i])) {
+                    customerList.add(splitLine[0]);
+                    itemsSold.add(splitLine[3]);
+                    products.add(splitLine[1]);
+                }
+            }
+
             String[] customers = customerList.toArray(new String[0]);
-            List<String> items = Arrays.asList(itemsSold[i].split(","));
-            String[] itemsCount = items.toArray(new String[0]);
-            List<String> prod = Arrays.asList(products[i].split(","));
-            String[] storeProducts = prod.toArray(new String[0]);
-            List<String> sale = Arrays.asList(sales[i].split(","));
-            String[] soldCount = sale.toArray(new String[0]);
+            System.out.println("Customer Data");
+            String[] itemsCount = itemsSold.toArray(new String[0]);
+            String[] storeProducts = products.toArray(new String[0]);
             boolean printJ = false;
             for (int j = 0; j < customers.length; j++) {
                 System.out.println("Customer:" + customers[j] + "Items Purchased: " + itemsCount[j]);
@@ -54,12 +54,19 @@ public class SellersDashboard {
             if (!printJ) {
                 System.out.println("~No Customer Data~");
             }
-            
-            //Product Data
             System.out.println("\nProduct Data");
             boolean printK = false;
-            for (int k = 0; k < products.length; k++) {
-                System.out.println("Product:" + storeProducts[k] + "Number of Sales: " + soldCount[k]);
+            for (int k = 0; k < storeProducts.length; k++) {
+                int soldCount = 0;
+                BufferedReader sr = new BufferedReader(new FileReader("purchased.txt"));
+                String countLine;
+                while ((countLine = sr.readLine()) != null) {
+                    String[] splitLineSC = countLine.split(";");
+                    if (storeProducts[k].equals(splitLineSC[1])) {
+                        soldCount += parseInt(splitLineSC[3]);
+                    }
+                }
+                System.out.println("Product:" + storeProducts[k] + "Number of Sales: " + soldCount);
                 printK = true;
             }
             if (!printK) {
