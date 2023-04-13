@@ -25,7 +25,7 @@ public class Customers extends Selection {
 
     //adds to purchase history when item is purchased
     public void updatePurchaseHistory(String product, String store, String description, int quantity, double price) throws IOException {
-        PrintWriter w = new PrintWriter(new FileWriter("purchasehistory.txt", true), true);
+        PrintWriter w = new PrintWriter(new FileWriter("purchased.txt", true), true);
         w.write(username + ";" + store + ";" + product + ";" + description + ";" + quantity + ";" + price);
         w.println();
         w.close();
@@ -34,7 +34,7 @@ public class Customers extends Selection {
     // return purchase history so customer can view it
     public String getPurchaseHistory() throws IOException {
         String purchaseHistory = null;
-        BufferedReader r = new BufferedReader(new FileReader("purchasehistory.txt"));
+        BufferedReader r = new BufferedReader(new FileReader("purchased.txt"));
         String line = r.readLine();
 
         while (line != null) {
@@ -51,152 +51,121 @@ public class Customers extends Selection {
     }
 
     // search method using product name
-    public String searchProductName(String product) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
+    public String searchProductName(ArrayList<String> list, String product) throws IOException {
         String foundProducts = null;
 
-        while (line != null) {
-            String[] splitLine = line.split(";");
+        for (int i = 0; i < list.size(); i++) {
+            String[] splitLine = list.get(i).split(";");
             if (splitLine[2].equals(product)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + line;
+                    foundProducts += ", " + list.get(i);
                 } else {
-                    foundProducts = line;
+                    foundProducts = list.get(i);
                 }
 
             }
-            line = r.readLine();
         }
-        r.close();
-        return foundProducts;
+        return foundProducts;//2
     }
 
     // search method using store
-    public String searchProductStore(String store) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
+    public String searchProductStore(ArrayList<String> list, String store) throws IOException {
+
         String foundProducts = null;
 
-        while (line != null) {
-            String[] splitLine = line.split(";");
+        for (int i = 0; i < list.size(); i++) {
+            String[] splitLine = list.get(i).split(";");
             if (splitLine[1].equals(store)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + line;
+                    foundProducts += ", " + list.get(i);
                 } else {
-                    foundProducts = line;
+                    foundProducts = list.get(i);
                 }
 
             }
-            line = r.readLine();
         }
-        r.close();
-        return foundProducts;
+        return foundProducts; //1
     }
 
     // search method using product description
-    public String searchProductDescription(String description) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
+    public String searchProductDescription(ArrayList<String> list, String description) throws IOException {
         String foundProducts = null;
 
-        while (line != null) {
-            String[] splitLine = line.split(";");
+        for (int i = 0; i < list.size(); i++) {
+            String[] splitLine = list.get(i).split(";");
             if (splitLine[3].equals(description)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + line;
+                    foundProducts += ", " + list.get(i);
                 } else {
-                    foundProducts = line;
+                    foundProducts = list.get(i);
                 }
 
             }
-            line = r.readLine();
         }
-        r.close();
         return foundProducts;
     }
 
     // return an array list after sorting the products by quantity
     // will return full lines from product.txt
-    public ArrayList<String> sortByQuantity() throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
+    public ArrayList<String> sortByQuantity(ArrayList<String> list) throws IOException {
         ArrayList<String> newMarket = null;
 
-        while (line != null) {
-            String[] splitLine = line.split(";");
+
+            String[] splitLine = list.get(0).split(";");
             int quantity = Integer.parseInt(splitLine[4]);
+            newMarket.add(list.get(0));
             boolean added = false;
-            if (newMarket != null) {
+
+            for (int j = 1; j < list.size(); j++) {
                 for (int i = 0; i < newMarket.size(); i++) {
                     String[] splitProductLine = newMarket.get(i).split(";");
                     int currentQuantity = Integer.parseInt(splitProductLine[4]);
                     if (quantity > currentQuantity) {
-                        newMarket.add(i, line);
+                        newMarket.add(i, list.get(j));
                         added = true;
                     }
                 }
                 if (!added) {
-                    newMarket.add(line);
+                    newMarket.add(list.get(j));
                 }
-            } else {
-                newMarket.add(line);
+                added = false;
             }
-
-            line = r.readLine();
-        }
         return newMarket;
     }
 
     // return an array list after sorting the products by price
     // will return full lines from product.txt
-    public ArrayList<String> sortByPrice() throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
+    public ArrayList<String> sortByPrice(ArrayList<String> list) throws IOException {
         ArrayList<String> newMarket = null;
 
-        while (line != null) {
-            String[] splitLine = line.split(";");
-            double price = Double.parseDouble(splitLine[5]);
-            boolean added = false;
-            if (newMarket != null) {
-                for (int i = 0; i < newMarket.size(); i++) {
-                    String[] splitProductLine = newMarket.get(i).split(";");
-                    double currentPrice = Double.parseDouble(splitProductLine[5]);
-                    if (price > currentPrice) {
-                        newMarket.add(i, line);
-                        added = true;
-                    }
-                }
-                if (!added) {
-                    newMarket.add(line);
-                }
-            } else {
-                newMarket.add(line);
-            }
 
-            line = r.readLine();
+        String[] splitLine = list.get(0).split(";");
+        int price = Integer.parseInt(splitLine[5]);
+        newMarket.add(list.get(0));
+        boolean added = false;
+
+        for (int j = 1; j < list.size(); j++) {
+            for (int i = 0; i < newMarket.size(); i++) {
+                String[] splitProductLine = newMarket.get(i).split(";");
+                int currentPrice = Integer.parseInt(splitProductLine[5]);
+                if (price > currentPrice) {
+                    newMarket.add(i, list.get(j));
+                    added = true;
+                }
+            }
+            if (!added) {
+                newMarket.add(list.get(j));
+            }
+            added = false;
         }
         return newMarket;
     }
-    
-    // view overall marketplace
 
-    public ArrayList<String> productsForSale() throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader("products.txt"));
-        String line = r.readLine();
-        ArrayList<String> arrOfProducts = null;
-        while (line != null) {
-            arrOfProducts.add(line);
-            line = r.readLine();
-        }
-        r.close();
-        return arrOfProducts;
-    }
-    
+
     // returns customer's username
     public String getUsername() {
         return username;
     }
 
 }
+
