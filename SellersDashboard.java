@@ -62,7 +62,7 @@ public class SellersDashboard {
                 String countLine;
                 while ((countLine = sr.readLine()) != null) {
                     String[] splitLineSC = countLine.split(";");
-                    if (storeProducts[k].equals(splitLineSC[1])) {
+                    if (storeProducts[k].equals(splitLineSC[1]) && (stores[i].equals(splitLineSC[4]))) {
                         soldCount += parseInt(splitLineSC[3]);
                     }
                 }
