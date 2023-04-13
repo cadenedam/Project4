@@ -81,12 +81,12 @@ public class Marketplace {
                                     scan.nextLine();
 
                                     if (sorting == 1) {
-                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice();
+                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice(market);
                                         for (int i = 0; i < sortedMarket.size(); i++) {
                                             System.out.println(sortedMarket.get(i));
                                         }
                                     } else if (sorting == 2) {
-                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity();
+                                        ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity(market);
                                         for (int i = 0; i < sortedMarket.size(); i++) {
                                             System.out.println(sortedMarket.get(i));
                                         }
@@ -128,15 +128,15 @@ public class Marketplace {
                                 if (choice == 1) {
                                     System.out.println("Please type the name of the product you're searching for:");
                                     String product = scan.nextLine();
-                                    (customers.get(username)).searchProductName(product);
+                                    (customers.get(username)).searchProductName(market, product);
                                 } else if (choice == 2) {
                                     System.out.println("Please type the name of the store you're searching for:");
                                     String store = scan.nextLine();
-                                    (customers.get(username)).searchProductStore(store);
+                                    (customers.get(username)).searchProductStore(market, store);
                                 } else if (choice == 3) {
                                     System.out.println("Please type part of a description you're searching for:");
                                     String description = scan.nextLine();
-                                    (customers.get(username)).searchProductDescription(description);
+                                    (customers.get(username)).searchProductDescription(market, description);
                                 } else {
                                     System.out.println("That's not a valid option!");
                                 }
