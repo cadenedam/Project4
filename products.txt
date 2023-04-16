@@ -1,0 +1,2 @@
+cedam;beststore;bestproduct;bestest product ever;7;6.97
+cedam;beststore;bestproduct;bestest product ever;3;6.97

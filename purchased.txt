@@ -1,0 +1,2 @@
+cadenedam;newproduct;29.99;5
+cadenedam;;newproduct;;2;0.0

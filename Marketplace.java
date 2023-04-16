@@ -15,8 +15,8 @@ public class Marketplace {
         boolean validUser = true;
         
         //Makes sure people enter a correct value for this
-        do {
-            validUser = true;
+            validUser = false;
+            do {
             System.out.println("Welcome to the Marketplace!" +
                     "\nAre you a customer or a seller?" +
                     "\n1. Customer" +
@@ -29,6 +29,7 @@ public class Marketplace {
             if (user == 1) {
                 boolean loggedIn = false;
                 BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                do {
                     System.out.println("Enter username:");
                     String username = scan.nextLine();
                     System.out.println("Enter password:");
@@ -43,6 +44,7 @@ public class Marketplace {
                             if (lineSplit[1].equals(username)) {
                                 if (lineSplit[2].equals(password)) {
                                     loggedIn = true;
+                                    validUser = true;
                                 }
                             }
                             line = br.readLine();
@@ -97,46 +99,55 @@ public class Marketplace {
                                 System.out.println("Which product would you like to view? (case sensitive)");
                                 String selectedProduct = scan.nextLine();
                                 String viewProduct = viewProduct(selectedProduct);
-                                System.out.println("\n" + viewProduct);
-                                System.out.println("\nWould you like to purchase this product? (yes/no)");
-                                String purchasing = scan.nextLine();
-                                if (purchasing.equals("yes")) {
-                                    System.out.println("How many?");
-                                    int quantity = scan.nextInt();
-                                    scan.nextLine();
-                                    int availableQuantity = checkQuantity(selectedProduct);
+                                String purchasing = "";
 
-                                    if (availableQuantity - quantity > 0) {
-                                        productPurchased(selectedProduct, username, quantity);
-                                        double price = checkPrice(selectedProduct);
-                                        String store = checkStore(selectedProduct);
-                                        String description = checkDescription(selectedProduct);
-                                        (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
+                                if (!viewProduct.isEmpty()) {
+                                    System.out.println("\n" + viewProduct);
+                                    System.out.println("\nWould you like to purchase this product? (yes/no)");
+                                    purchasing = scan.nextLine();
+
+                                    if (purchasing.equals("yes")) {
+                                        System.out.println("How many?");
+                                        int quantity = scan.nextInt();
+                                        scan.nextLine();
+                                        int availableQuantity = checkQuantity(selectedProduct);
+    
+                                        if (availableQuantity - quantity > 0) {
+                                            productPurchased(selectedProduct, username, quantity);
+                                            double price = checkPrice(selectedProduct);
+                                            String store = checkStore(selectedProduct);
+                                            String description = checkDescription(selectedProduct);
+                                            (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
+                                        } else {
+                                            System.out.println("There aren't that many available!");
+                                        }
                                     } else {
-                                        System.out.println("There aren't that many available!");
+                                        System.out.println("Ok!");
                                     }
                                 } else {
-                                    System.out.println("Ok!");
+                                    System.out.println("No products match that name!");
                                 }
 
                                 break;
                             //Search for product
                             case 2:
-                                System.out.println("Do you want to search by\n1.Product name\n2. Store name\n3. Product description");
+                                ArrayList<String> newMarket = new ArrayList<String>();
+                                newMarket = printMarket();
+                                System.out.println("Do you want to search by\n1. Product name\n2. Store name\n3. Product description");
                                 int choice = scan.nextInt();
                                 scan.nextLine();
                                 if (choice == 1) {
                                     System.out.println("Please type the name of the product you're searching for:");
                                     String product = scan.nextLine();
-                                    (customers.get(username)).searchProductName(market, product);
+                                    (customers.get(username)).searchProductName(newMarket, product);
                                 } else if (choice == 2) {
                                     System.out.println("Please type the name of the store you're searching for:");
                                     String store = scan.nextLine();
-                                    (customers.get(username)).searchProductStore(market, store);
+                                    (customers.get(username)).searchProductStore(newMarket, store);
                                 } else if (choice == 3) {
                                     System.out.println("Please type part of a description you're searching for:");
                                     String description = scan.nextLine();
-                                    (customers.get(username)).searchProductDescription(market, description);
+                                    (customers.get(username)).searchProductDescription(newMarket, description);
                                 } else {
                                     System.out.println("That's not a valid option!");
                                 }
@@ -153,7 +164,10 @@ public class Marketplace {
                                 System.out.println("Please enter a valid input");
                         }
                     } while (selection != 4);
+                } else {
+                    System.out.println("Login failed!");
                 }
+            } while (!loggedIn);
 
             //Seller section
             } else if (user == 2) {
@@ -174,6 +188,7 @@ public class Marketplace {
                             if (lineSplit[1].equals(username)) {
                                 if (lineSplit[2].equals(password)) {
                                     loggedIn = true;
+                                    validUser = true;
                                 }
                             }
                             line = br.readLine();
@@ -206,18 +221,24 @@ public class Marketplace {
                                     System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
                                     System.out.println(" (case sensitive)");
                                     String productStore = scan.nextLine();
-                                    
-                                    //Get all info for product, add product
-                                    System.out.println("What's the product description?");
-                                    String description = scan.nextLine();
-                                    System.out.println("How many are available?");
-                                    int quantity = scan.nextInt();
-                                    scan.nextLine();
-                                    System.out.println("How much does it cost?");
-                                    double price = scan.nextDouble();
-                                    scan.nextLine();
 
-                                    (sellers.get(username)).addProduct(product, productStore, description, quantity, price);
+                                    boolean storeExists = storeExists(productStore);
+
+                                    if (storeExists) {
+                                    //Get all info for product, add product
+                                        System.out.println("What's the product description?");
+                                        String description = scan.nextLine();
+                                        System.out.println("How many are available?");
+                                        int quantity = scan.nextInt();
+                                        scan.nextLine();
+                                        System.out.println("How much does it cost?");
+                                        double price = scan.nextDouble();
+                                        scan.nextLine();
+
+                                        (sellers.get(username)).addProduct(product, productStore, description, quantity, price);
+                                    } else {
+                                        System.out.println("That store doesn't exist!");
+                                    }
                                 break;
                                 //Edit/Delete product
                                 case 2:
@@ -240,17 +261,24 @@ public class Marketplace {
                                     System.out.println(" (case sensitive)");
                                     String newProductStore = scan.nextLine();
                                     
-                                    System.out.println("What's the product description?");
-                                    String newDescription = scan.nextLine();
-                                    System.out.println("How many are available?");
-                                    int newQuantity = scan.nextInt();
-                                    scan.nextLine();
-                                    System.out.println("How much does it cost?");
-                                    double newPrice = scan.nextDouble();
-                                    scan.nextLine();
+                                    boolean newStoreExists = storeExists(newProductStore);
 
-                                    (sellers.get(username)).deleteProduct(editProduct);
-                                    (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
+                                    if (newStoreExists) {
+                                    //Get all info for product, add product
+                                        System.out.println("What's the product description?");
+                                        String newDescription = scan.nextLine();
+                                        System.out.println("How many are available?");
+                                        int newQuantity = scan.nextInt();
+                                        scan.nextLine();
+                                        System.out.println("How much does it cost?");
+                                        double newPrice = scan.nextDouble();
+                                        scan.nextLine();
+
+                                        (sellers.get(username)).deleteProduct(editProduct);
+                                        (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
+                                    } else {
+                                        System.out.println("That store doesn't exist!");
+                                    }
                                 //Deletes product
                                 } else if (choice == 2) {
                                     System.out.println("Which product would you like to delete?");
@@ -338,7 +366,7 @@ public class Marketplace {
                 System.out.println("That's not a valid input!");
                 validUser = false;
             }
-        } while (!validUser);
+        }while (!validUser);
     }
 
     //This will eventually print the marketplace for customers
@@ -418,6 +446,21 @@ public class Marketplace {
         return store;
     }
 
+    public static boolean storeExists(String store) throws IOException{
+        boolean storeExists = false;
+        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        String line = br.readLine();
+
+        while (line != null) {
+            String[] splitLine = line.split(";");
+            if (splitLine[1].equals(store)) {
+                storeExists = true;
+            }
+            line = br.readLine();
+        }
+        return storeExists;
+    }
+
     public static String checkDescription(String product) throws IOException{
         String description = "";
         BufferedReader br = new BufferedReader(new FileReader("products.txt"));
@@ -443,10 +486,10 @@ public class Marketplace {
             if (splitLine[2].equals(product)) {
                 newQuantity = Integer.parseInt(splitLine[4]) - quantity;
             }
-            if (newQuantity > 0) {
+            if (newQuantity > 0 && !product.isEmpty()) {
                 (sellers.get(splitLine[0])).deleteProduct(product);
                 (sellers.get(splitLine[0])).addProduct(splitLine[2], splitLine[1], splitLine[3], newQuantity, Double.parseDouble(splitLine[5]));
-                pw.write(username + ";" + product + ";" + splitLine[5] + ";" + splitLine[4]);
+                pw.write(username + ";" + product + ";" + splitLine[1] + ";" + splitLine[5] + ";" + splitLine[4]);
                 pw.println();
                 pw.close();
             }
