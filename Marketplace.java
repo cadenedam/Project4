@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -17,23 +18,20 @@ public class Marketplace {
         //Makes sure people enter a correct value for this
         validUser = false;
         do {
-            System.out.println("Welcome to the Marketplace!" +
-                    "\nAre you a customer or a seller?" +
-                    "\n1. Customer" +
-                    "\n2. Seller" +
-                    "\n3. Create Account");
-            int user = scan.nextInt();
-            scan.nextLine();
-
+            String [] marketMenuArray = {"1. Customer", "2. Seller", "3. Create Account"};
+            String user = (String) JOptionPane.showInputDialog(null, "Are you a customer or a seller?",
+                    "Welcome to the Marketplace!", JOptionPane.QUESTION_MESSAGE,
+                    null, marketMenuArray, marketMenuArray[0]);
+            int userNum = Integer.parseInt(String.valueOf(user.charAt(0)));
             //Customer section
-            if (user == 1) {
+            if (userNum == 1) {
                 boolean loggedIn = false;
                 BufferedReader br = new BufferedReader(new FileReader("users.txt"));
                 do {
-                    System.out.println("Enter username:");
-                    String username = scan.nextLine();
-                    System.out.println("Enter password:");
-                    String password = scan.nextLine();
+                    String username = JOptionPane.showInputDialog(null, "Enter username:",
+                            "Log In", JOptionPane.QUESTION_MESSAGE);
+                    String password = JOptionPane.showInputDialog(null, "Enter password:",
+                            "Log In", JOptionPane.QUESTION_MESSAGE);
 
                     //User authentication (goes through users.txt file, validates password)
                     String line;
@@ -50,66 +48,85 @@ public class Marketplace {
                             line = br.readLine();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); // don't know if I need to do an error message?
                     }
                     //Customer homepage
                     if (loggedIn) {
                         int selection = 0;
                         do {
-                            System.out.println("What would you like to do?");
-                            System.out.println("1. View marketplace");
-                            System.out.println("2. Search for a product");
-                            System.out.println("3. Review purchase history");
-                            System.out.println("4. Logout");
-                            selection = scan.nextInt();
-                            scan.nextLine();
+                            String [] menuArray = {"1. View marketplace", "2. Search for a product", "3. Review purchase history", "4. Logout"};
+                            selection = (int) JOptionPane.showInputDialog(null, "What would you like to do?",
+                                    "Menu", JOptionPane.QUESTION_MESSAGE,
+                                    null, menuArray, menuArray[0]);
 
                             switch (selection) {
                                 //View marketplace
                                 case 1:
                                     ArrayList<String> market = new ArrayList<String>();
                                     market = printMarket();
-                                    System.out.println("Market: (product, price, store)\n");
+                                    String marketplace = null;
                                     for (int i = 0; i < market.size(); i++) {
-                                        System.out.println(market.get(i));
+                                        marketplace += market.get(i) + "\n";
                                     }
-                                    System.out.print("\n");
-                                    System.out.println("Would you like to sort the market at all? (yes/no)");
-                                    String sort = scan.nextLine();
-                                    sort = sort.toLowerCase();
-                                    if (sort.equals("yes")) {
-                                        System.out.println("Would you like to sort by\n1. Price\n2. Quantity available");
-                                        int sorting = scan.nextInt();
-                                        scan.nextLine();
+                                    if (marketplace == null) {
+                                        marketplace = "There is nothing currently in the marketplace.";
+                                    }
+                                    JOptionPane.showInputDialog(null, marketplace,
+                                            "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
+
+
+                                    int sort = JOptionPane.showConfirmDialog(null, "Would you like to sort the market at all?",
+                                            "View Market", JOptionPane.YES_NO_OPTION);
+                                    if (sort == 1) {
+                                        String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
+
+                                        int sorting = (int) JOptionPane.showInputDialog(null, "Would you like to sort by?",
+                                                "View Market", JOptionPane.QUESTION_MESSAGE,
+                                                null, sortArray, sortArray[0]);
 
                                         if (sorting == 1) {
                                             ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice(market);
+                                            marketplace = null;
                                             for (int i = 0; i < sortedMarket.size(); i++) {
-                                                System.out.println(sortedMarket.get(i));
+                                                marketplace += sortedMarket.get(i) + "\n";
                                             }
+                                            if (marketplace == null) {
+                                                marketplace = "There is nothing currently in the marketplace.";
+                                            }
+                                            JOptionPane.showInputDialog(null, marketplace,
+                                                    "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
+
                                         } else if (sorting == 2) {
                                             ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity(market);
+                                            marketplace = null;
                                             for (int i = 0; i < sortedMarket.size(); i++) {
-                                                System.out.println(sortedMarket.get(i));
+                                                marketplace += sortedMarket.get(i) + "\n";
                                             }
+                                            if (marketplace == null) {
+                                                marketplace = "There is nothing currently in the marketplace.";
+                                            }
+                                            JOptionPane.showInputDialog(null, marketplace,
+                                                    "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
+
                                         } else {
-                                            System.out.println("That is not a valid choice!");
+                                            JOptionPane.showMessageDialog(null, "That is not a valid choice!", "Error",
+                                                    JOptionPane.ERROR_MESSAGE);
                                         }
                                     }
-                                    System.out.println("Which product would you like to view? (case sensitive)");
-                                    String selectedProduct = scan.nextLine();
+                                    String selectedProduct = JOptionPane.showInputDialog(null, "Which product would you like to view? (case sensitive)",
+                                            "View Market", JOptionPane.QUESTION_MESSAGE);
                                     String viewProduct = viewProduct(selectedProduct);
-                                    String purchasing = "";
+                                    int purchasing = 0;
 
                                     if (!viewProduct.isEmpty()) {
-                                        System.out.println("\n" + viewProduct);
-                                        System.out.println("\nWould you like to purchase this product? (yes/no)");
-                                        purchasing = scan.nextLine();
+                                        JOptionPane.showMessageDialog(null, viewProduct,
+                                                "View Market" , JOptionPane.INFORMATION_MESSAGE);
+                                        purchasing = JOptionPane.showConfirmDialog(null, "Would you like to purchase this product?",
+                                                "View Market", JOptionPane.YES_NO_OPTION);
 
-                                        if (purchasing.equals("yes")) {
-                                            System.out.println("How many?");
-                                            int quantity = scan.nextInt();
-                                            scan.nextLine();
+                                        if (purchasing == 1) {
+                                            int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many?",
+                                                    "View Market", JOptionPane.QUESTION_MESSAGE));
                                             int availableQuantity = checkQuantity(selectedProduct);
 
                                             if (availableQuantity - quantity > 0) {
@@ -119,13 +136,16 @@ public class Marketplace {
                                                 String description = checkDescription(selectedProduct);
                                                 (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
                                             } else {
-                                                System.out.println("There aren't that many available!");
+                                                JOptionPane.showMessageDialog(null, "There aren't that many available!", "Error",
+                                                        JOptionPane.ERROR_MESSAGE);
                                             }
                                         } else {
-                                            System.out.println("Ok!");
+                                            JOptionPane.showMessageDialog(null, "Ok!",
+                                                    "View Market" , JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     } else {
-                                        System.out.println("No products match that name!");
+                                        JOptionPane.showMessageDialog(null, "No products match that name!", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
                                     }
 
                                     break;
@@ -133,51 +153,59 @@ public class Marketplace {
                                 case 2:
                                     ArrayList<String> newMarket = new ArrayList<String>();
                                     newMarket = printMarket();
-                                    System.out.println("Do you want to search by\n1. Product name\n2. Store name\n3. Product description");
-                                    int choice = scan.nextInt();
-                                    scan.nextLine();
+                                    String [] searchArray = {"1. Product name", "2. Store name", "3. Product description"};
+                                    int choice = (int) JOptionPane.showInputDialog(null, "Do you want to search by: ",
+                                            "Search", JOptionPane.QUESTION_MESSAGE,
+                                            null, searchArray, searchArray[0]);
                                     if (choice == 1) {
-                                        System.out.println("Please type the name of the product you're searching for:");
-                                        String product = scan.nextLine();
+                                        String product = JOptionPane.showInputDialog(null, "Please type the name of the product you're searching for:",
+                                                "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductName(newMarket, product);
                                     } else if (choice == 2) {
-                                        System.out.println("Please type the name of the store you're searching for:");
-                                        String store = scan.nextLine();
+                                        String store = JOptionPane.showInputDialog(null, "Please type the name of the store you're searching for:",
+                                                "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductStore(newMarket, store);
                                     } else if (choice == 3) {
-                                        System.out.println("Please type part of a description you're searching for:");
-                                        String description = scan.nextLine();
+                                        String description = JOptionPane.showInputDialog(null, "Please type the part of a description you're searching for:",
+                                                "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductDescription(newMarket, description);
                                     } else {
-                                        System.out.println("That's not a valid option!");
+                                        JOptionPane.showMessageDialog(null, "That's not a valid option!", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
                                     }
                                     break;
                                 case 3:
                                     String purchaseHistory = (customers.get(username)).getPurchaseHistory();
-                                    System.out.println(purchaseHistory);
+                                    JOptionPane.showMessageDialog(null, purchaseHistory,
+                                            "Purchase History" , JOptionPane.INFORMATION_MESSAGE);
                                     break;
                                 //Logout
                                 case 4:
-                                    System.out.println("Bye!");
+                                    JOptionPane.showMessageDialog(null, "Good Bye!",
+                                            "Log Out" , JOptionPane.INFORMATION_MESSAGE);
                                     break;
                                 default:
-                                    System.out.println("Please enter a valid input");
+                                    JOptionPane.showMessageDialog(null, "Please enter a valid input", "Error",
+                                            JOptionPane.ERROR_MESSAGE);
                             }
                         } while (selection != 4);
                     } else {
-                        System.out.println("Login failed!");
+                        JOptionPane.showMessageDialog(null, "Login failed!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } while (!loggedIn);
 
                 //Seller section
-            } else if (user == 2) {
+            } else if (userNum == 2) {
                 boolean loggedIn = false;
                 do {
                     BufferedReader br = new BufferedReader(new FileReader("users.txt"));
-                    System.out.println("Enter username:");
-                    String username = scan.nextLine();
-                    System.out.println("Enter password:");
-                    String password = scan.nextLine();
+
+                    String username = JOptionPane.showInputDialog(null, "Enter username:",
+                            "Log In", JOptionPane.QUESTION_MESSAGE);
+                    String password = JOptionPane.showInputDialog(null, "Enter password:",
+                            "Log In", JOptionPane.QUESTION_MESSAGE);
+
 
                     //User authentication (goes through users.txt file, validates password)
                     String line;
@@ -198,108 +226,109 @@ public class Marketplace {
                     }
 
                     if (loggedIn) {
-                        int selection = 0;
+                        String selection;
+                        int selectionNum = 0;
                         //Seller homepage
                         do {
-                            System.out.println("What would you like to do?");
-                            System.out.println("1. Create a product");
-                            System.out.println("2. Edit/Delete a product");
-                            System.out.println("3. Create a store");
-                            System.out.println("4. View stores");
-                            System.out.println("5. View Seller Dashboard");
-                            System.out.println("6. Logout");
-                            selection = scan.nextInt();
-                            scan.nextLine();
+                            String [] menuArray = {"1. Create a product", "2. Edit/Delete a product", "3. Create a store", "4. View stores", "5. View Seller Dashboard", "6. Logout"};
+                            selection = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
+                                    "Menu", JOptionPane.QUESTION_MESSAGE,
+                                    null, menuArray, menuArray[0]);
+                            selectionNum = Integer.parseInt(String.valueOf(selection.charAt(0)));
 
-                            switch(selection) {
+                            switch(selectionNum) {
                                 //Create product
                                 case 1:
-                                    System.out.println("What's the name of the product?");
-                                    String product = scan.nextLine();
-                                    System.out.print("Which store will it go in?");
-                                    //print stores
-                                    System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
-                                    System.out.println(" (case sensitive)");
-                                    String productStore = scan.nextLine();
+                                    String product = JOptionPane.showInputDialog(null, "What's the name of the product?",
+                                            "Create Product", JOptionPane.QUESTION_MESSAGE);
 
+                                    String [] storesArray = ((sellers.get(username)).getStores()).split(", ");
+                                    // mot sure why this is here
+                                    // System.out.println(" (case sensitive)");
+                                    String productStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
+                                            "Create Product", JOptionPane.QUESTION_MESSAGE, null, storesArray, storesArray[0]);
+                                    System.out.println(productStore);
                                     boolean storeExists = storeExists(productStore);
 
                                     if (storeExists) {
                                         //Get all info for product, add product
-                                        System.out.println("What's the product description?");
-                                        String description = scan.nextLine();
-                                        System.out.println("How many are available?");
-                                        int quantity = scan.nextInt();
-                                        scan.nextLine();
-                                        System.out.println("How much does it cost?");
-                                        double price = scan.nextDouble();
-                                        scan.nextLine();
+                                        String description = JOptionPane.showInputDialog(null, "What's the product description?",
+                                                "Create Product", JOptionPane.QUESTION_MESSAGE);
+                                        int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
+                                                "Create Product", JOptionPane.QUESTION_MESSAGE));
+                                        double price = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
+                                                "Create Product", JOptionPane.QUESTION_MESSAGE));
 
                                         (sellers.get(username)).addProduct(product, productStore, description, quantity, price);
                                     } else {
-                                        System.out.println("That store doesn't exist!");
+                                        JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
                                     }
                                     break;
                                 //Edit/Delete product
                                 case 2:
-                                    System.out.println("What would you like to do?\n1. Edit\n2. Delete");
-                                    int choice = scan.nextInt();
-                                    scan.nextLine();
+                                    String [] optionsArray = {"1. Edit","2. Delete"};
+                                    int choice = (int) JOptionPane.showInputDialog(null, "What would you like to do?",
+                                        "Update Product", JOptionPane.QUESTION_MESSAGE,
+                                        null, optionsArray, optionsArray[0]);
 
                                     //Edit product (deletes, then adds with changes)
                                     if (choice == 1) {
-                                        System.out.println("Which product would you like to edit?");
-                                        String products = (sellers.get(username)).getProducts();
-                                        System.out.println(products);
-                                        String editProduct = scan.nextLine();
+                                        String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
+                                        String editProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
+                                                "Update Product", JOptionPane.QUESTION_MESSAGE,
+                                                null, productsArray, productsArray[0]);
 
-                                        System.out.println("What's the name of the product?");
-                                        String newProduct = scan.nextLine();
-                                        System.out.print("Which store will it go in?");
-                                        //print stores
-                                        System.out.print(" (" + (sellers.get(username)).getStores() + ")" );
-                                        System.out.println(" (case sensitive)");
-                                        String newProductStore = scan.nextLine();
+                                        String newProduct = JOptionPane.showInputDialog(null, "What's the name of the product?",
+                                                "Update Product", JOptionPane.QUESTION_MESSAGE);
+                                        storesArray = ((sellers.get(username)).getStores()).split(", ");
+                                        // mot sure why this is here
+                                        // System.out.println(" (case sensitive)");
+                                        String newProductStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
+                                                "Update Product", JOptionPane.QUESTION_MESSAGE, null, storesArray, storesArray[0]);
+
 
                                         boolean newStoreExists = storeExists(newProductStore);
 
                                         if (newStoreExists) {
                                             //Get all info for product, add product
-                                            System.out.println("What's the product description?");
-                                            String newDescription = scan.nextLine();
-                                            System.out.println("How many are available?");
-                                            int newQuantity = scan.nextInt();
-                                            scan.nextLine();
-                                            System.out.println("How much does it cost?");
-                                            double newPrice = scan.nextDouble();
-                                            scan.nextLine();
+                                            String newDescription = JOptionPane.showInputDialog(null, "What's the product description?",
+                                                    "Update Product", JOptionPane.QUESTION_MESSAGE);
+                                            int newQuantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
+                                                    "Update Product", JOptionPane.QUESTION_MESSAGE));
+                                            double newPrice = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
+                                                    "Update Product", JOptionPane.QUESTION_MESSAGE));
+
 
                                             (sellers.get(username)).deleteProduct(editProduct);
                                             (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
                                         } else {
-                                            System.out.println("That store doesn't exist!");
+                                            JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
+                                                    JOptionPane.ERROR_MESSAGE);
                                         }
                                         //Deletes product
                                     } else if (choice == 2) {
-                                        System.out.println("Which product would you like to delete?");
-                                        String products = (sellers.get(username)).getProducts();
-                                        System.out.println(products);
-                                        String unwantedProduct = scan.nextLine();
+                                        String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
+                                        String unwantedProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
+                                                "Update Product", JOptionPane.QUESTION_MESSAGE,
+                                                null, productsArray, productsArray[0]);
                                         (sellers.get(username)).deleteProduct(unwantedProduct);
                                     } else {
-                                        System.out.println("Pick a valid number please");
+                                        JOptionPane.showMessageDialog(null, "Pick a valid number please", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
                                     }
                                     break;
                                 //Create store
                                 case 3:
-                                    System.out.println("What's the name of the store?");
-                                    String storeName = scan.nextLine();
+                                    String storeName = JOptionPane.showInputDialog(null, "What's the name of the store?",
+                                            "Create Store", JOptionPane.QUESTION_MESSAGE);
                                     (sellers.get(username)).addStore(storeName);
                                     break;
                                 //View Stores
                                 case 4:
                                     String allStores = (sellers.get(username)).getStores();
-                                    System.out.println(allStores);
+                                    JOptionPane.showMessageDialog(null, allStores,
+                                            "View Stores", JOptionPane.INFORMATION_MESSAGE);
                                     break;
                                 //View Seller Dashboard
                                 case 5:
@@ -310,26 +339,30 @@ public class Marketplace {
                                     break;
                                 //Logout
                                 case 6:
-                                    System.out.println("Bye!");
+                                    JOptionPane.showMessageDialog(null, "Goodbye!",
+                                            "Log Out", JOptionPane.INFORMATION_MESSAGE);
                                     break;
                                 default:
-                                    System.out.println("Please enter a valid input");
+                                    JOptionPane.showMessageDialog(null, "Please enter a valid input into the menu", "Error",
+                                            JOptionPane.ERROR_MESSAGE);
                             }
-                        } while (selection != 6);
+                        } while (selectionNum != 6);
 
                     } else {
-                        System.out.println("Login failed!");
+                        JOptionPane.showMessageDialog(null, "Login failed!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } while (!loggedIn);
 
                 //User creation system
                 //Add new user authentication?
-            } else if (user == 3) {
+            } else if (userNum == 3) {
                 boolean userTaken;
                 String username;
                 do {
-                    System.out.println("Please enter a username:");
-                    username = scan.nextLine();
+                    username = JOptionPane.showInputDialog(null, "Please enter a username:",
+                            "Create Account", JOptionPane.QUESTION_MESSAGE);
+
                     BufferedReader br = new BufferedReader(new FileReader("users.txt"));
                     String line = br.readLine();
                     userTaken = false;
@@ -339,35 +372,38 @@ public class Marketplace {
                         String[] splitLine = line.split(";");
                         if (splitLine[1].equals(username)) {
                             userTaken = true;
-                            System.out.println("This username is taken!");
+                            JOptionPane.showMessageDialog(null, "This username is taken!", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                         line = br.readLine();
                     }
                 } while (userTaken);
 
-                System.out.println("Please enter a password:");
-                String password = scan.nextLine();
-                System.out.println("Are you a...\n1. Customer\n2. Seller");
-                int userType = scan.nextInt();
-                scan.nextLine();
-
-                if (userType == 1) {
+                String password = JOptionPane.showInputDialog(null, "Please enter a password:",
+                        "Create Account", JOptionPane.QUESTION_MESSAGE);
+                String[] userTypeArray = {"1. Customer", "2. Seller"};
+                String userType = (String) JOptionPane.showInputDialog(null, "\"Are you a...",
+                        "Create Account", JOptionPane.QUESTION_MESSAGE, null, userTypeArray, userTypeArray[0]);
+                int userTypeNum = Integer.parseInt(String.valueOf(userType.charAt(0)));
+                if (userTypeNum == 1) {
                     try {
                         addUser("Customer", username, password);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (userType == 2) {
+                } else if (userTypeNum == 2) {
                     try {
                         addUser("Seller", username, password);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    System.out.println("Please enter a valid number");
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                System.out.println("That's not a valid input!");
+                JOptionPane.showMessageDialog(null, "That's not a valid input!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 validUser = false;
             }
         }while (!validUser);
@@ -452,7 +488,7 @@ public class Marketplace {
 
     public static boolean storeExists(String store) throws IOException{
         boolean storeExists = false;
-        BufferedReader br = new BufferedReader(new FileReader("products.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
         String line = br.readLine();
 
         while (line != null) {
@@ -509,7 +545,7 @@ public class Marketplace {
         pw.println();
         pw.close();
 
-        //"put" adds them to the hashmaps, with the specified username, 
+        //"put" adds them to the hashmaps, with the specified username,
         //and the specified user profile
         if (userType.equals("Seller")) {
             Sellers newSeller = new Sellers(username, password);
