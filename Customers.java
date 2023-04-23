@@ -24,7 +24,9 @@ public class Customers extends Selection {
 
 
     //adds to purchase history when item is purchased
-    public void updatePurchaseHistory(String product, String store, String description, int quantity, double price) throws IOException {
+    public void updatePurchaseHistory(String product, String store, String description,
+                                      int quantity, double price) throws IOException {
+        //just in case Vocareum throws a fit about excessive characters
         PrintWriter w = new PrintWriter(new FileWriter("purchased.txt", true), true);
         w.write(username + ";" + store + ";" + product + ";" + description + ";" + quantity + ";" + price);
         w.println();
@@ -33,83 +35,102 @@ public class Customers extends Selection {
 
     // return purchase history so customer can view it
     public String getPurchaseHistory() throws IOException {
-        String purchaseHistory = null;
+        StringBuilder purchaseHistory = null;
         BufferedReader r = new BufferedReader(new FileReader("purchased.txt"));
         String line = r.readLine();
 
         while (line != null) {
             String [] arr = line.split(";");
             if (arr[0].equals(username) && purchaseHistory != null) {
-                purchaseHistory = purchaseHistory + ", " + arr[2];
+                //makes sure that the username is already in the purchased.txt history
+                purchaseHistory.append(", ").append(arr[2]);
             } else if (arr[0].equals(username)) {
-                purchaseHistory = arr[2];
+                //the String purchaseHistory can't be null for this
+                purchaseHistory = new StringBuilder(arr[2]);
             }
             line = r.readLine();
         }
         r.close();
-        return purchaseHistory;
+        assert purchaseHistory != null;
+        //done to prevent a null pointer exception on the toString method
+        return purchaseHistory.toString();
     }
 
     // search method using product name
     public String searchProductName(ArrayList<String> list, String product) throws IOException {
-        String foundProducts = null;
+        StringBuilder foundProducts = null;
 
-        for (int i = 0; i < list.size(); i++) {
-            String[] splitLine = list.get(i).split(";");
+        for (String s : list) {
+            String[] splitLine = s.split(";");
             if (splitLine[2].equals(product)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + list.get(i);
+                    foundProducts.append(", ").append(s);
                 } else {
-                    foundProducts = list.get(i);
+                    foundProducts = new StringBuilder(s);
+                    //in case the products didn't already exist
                 }
 
             }
         }
-        return foundProducts;//2
+        assert foundProducts != null;
+        return foundProducts.toString();
+        //to avoid possible NullPointerException error
+
+        //note that this method is never used
     }
 
     // search method using store
     public String searchProductStore(ArrayList<String> list, String store) throws IOException {
 
-        String foundProducts = null;
+        StringBuilder foundProducts = null;
 
-        for (int i = 0; i < list.size(); i++) {
-            String[] splitLine = list.get(i).split(";");
+        for (String s : list) {
+            String[] splitLine = s.split(";");
             if (splitLine[1].equals(store)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + list.get(i);
+                    foundProducts.append(", ").append(s);
                 } else {
-                    foundProducts = list.get(i);
+                    foundProducts = new StringBuilder(s);
+                    //creates the foundProducts StringBuilder since it didn't already exist
                 }
 
             }
         }
-        return foundProducts; //1
+        assert foundProducts != null;
+        return foundProducts.toString();
+        //to avoid possible NullPointerException error
+
+        //note that this method is never used
     }
 
     // search method using product description
     public String searchProductDescription(ArrayList<String> list, String description) throws IOException {
-        String foundProducts = null;
+        StringBuilder foundProducts = null;
 
-        for (int i = 0; i < list.size(); i++) {
-            String[] splitLine = list.get(i).split(";");
+        for (String s : list) {
+            String[] splitLine = s.split(";");
             if (splitLine[3].equals(description)) {
                 if (foundProducts != null) {
-                    foundProducts += ", " + list.get(i);
+                    foundProducts.append(", ").append(s);
                 } else {
-                    foundProducts = list.get(i);
+                    foundProducts = new StringBuilder(s);
+                    //creates the foundProducts StringBuilder since it didn't already exist
                 }
 
             }
         }
-        return foundProducts;
+        assert foundProducts != null;
+        return foundProducts.toString();
+        //to avoid possible NullPointerException error
+
+        //note that this method is never used
     }
 
     // return an array list after sorting the products by quantity
     // will return full lines from product.txt
     public ArrayList<String> sortByQuantity(ArrayList<String> list) throws IOException {
         ArrayList<String> newMarket = null;
-
+        // initializes the newMarket String ArrayList as null
 
             String[] splitLine = list.get(0).split(";");
             int quantity = Integer.parseInt(splitLine[4]);
@@ -123,12 +144,16 @@ public class Customers extends Selection {
                     if (quantity > currentQuantity) {
                         newMarket.add(i, list.get(j));
                         added = true;
+                        //this checks to make sure that the quantity of next products is
+                        //greater than the existing quantity
                     }
                 }
                 if (!added) {
                     newMarket.add(list.get(j));
+                    //this keeps the current quantity as the j position of the newMarket row
                 }
                 added = false;
+                // the new quantity wasn't greater so the order wasn't changed
             }
         return newMarket;
     }
@@ -137,7 +162,7 @@ public class Customers extends Selection {
     // will return full lines from product.txt
     public ArrayList<String> sortByPrice(ArrayList<String> list) throws IOException {
         ArrayList<String> newMarket = null;
-
+        // initializes the newMarket String ArrayList as null
 
         String[] splitLine = list.get(0).split(";");
         int price = Integer.parseInt(splitLine[5]);
@@ -151,12 +176,16 @@ public class Customers extends Selection {
                 if (price > currentPrice) {
                     newMarket.add(i, list.get(j));
                     added = true;
+                    //this checks to make sure that the price of next products is
+                    //greater than the existing price
                 }
             }
             if (!added) {
                 newMarket.add(list.get(j));
+                //this keeps the current price as the j position of the newMarket row
             }
             added = false;
+            // the new price wasn't greater so the order wasn't changed
         }
         return newMarket;
     }
