@@ -52,14 +52,15 @@ public class Marketplace {
                     }
                     //Customer homepage
                     if (loggedIn) {
-                        int selection = 0;
+                        int selectionNum = 0;
                         do {
                             String [] menuArray = {"1. View marketplace", "2. Search for a product", "3. Review purchase history", "4. Logout"};
-                            selection = (int) JOptionPane.showInputDialog(null, "What would you like to do?",
+                            String selection = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                     "Menu", JOptionPane.QUESTION_MESSAGE,
                                     null, menuArray, menuArray[0]);
+                            selectionNum = Integer.parseInt(String.valueOf(selection.charAt(0)));
 
-                            switch (selection) {
+                            switch (selectionNum) {
                                 //View marketplace
                                 case 1:
                                     ArrayList<String> market = new ArrayList<String>();
@@ -80,11 +81,11 @@ public class Marketplace {
                                     if (sort == 1) {
                                         String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
 
-                                        int sorting = (int) JOptionPane.showInputDialog(null, "Would you like to sort by?",
+                                        String sorting = (String) JOptionPane.showInputDialog(null, "Would you like to sort by?",
                                                 "View Market", JOptionPane.QUESTION_MESSAGE,
                                                 null, sortArray, sortArray[0]);
-
-                                        if (sorting == 1) {
+                                        int sortingNum = Integer.parseInt(String.valueOf(sorting.charAt(0)));
+                                        if (sortingNum == 1) {
                                             ArrayList<String> sortedMarket = (customers.get(username)).sortByPrice(market);
                                             marketplace = null;
                                             for (int i = 0; i < sortedMarket.size(); i++) {
@@ -96,7 +97,7 @@ public class Marketplace {
                                             JOptionPane.showInputDialog(null, marketplace,
                                                     "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
 
-                                        } else if (sorting == 2) {
+                                        } else if (sortingNum == 2) {
                                             ArrayList<String> sortedMarket = (customers.get(username)).sortByQuantity(market);
                                             marketplace = null;
                                             for (int i = 0; i < sortedMarket.size(); i++) {
@@ -154,18 +155,19 @@ public class Marketplace {
                                     ArrayList<String> newMarket = new ArrayList<String>();
                                     newMarket = printMarket();
                                     String [] searchArray = {"1. Product name", "2. Store name", "3. Product description"};
-                                    int choice = (int) JOptionPane.showInputDialog(null, "Do you want to search by: ",
+                                    String choice = (String) JOptionPane.showInputDialog(null, "Do you want to search by: ",
                                             "Search", JOptionPane.QUESTION_MESSAGE,
                                             null, searchArray, searchArray[0]);
-                                    if (choice == 1) {
+                                    int choiceNum = Integer.parseInt(String.valueOf(choice.charAt(0)));
+                                    if (choiceNum == 1) {
                                         String product = JOptionPane.showInputDialog(null, "Please type the name of the product you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductName(newMarket, product);
-                                    } else if (choice == 2) {
+                                    } else if (choiceNum == 2) {
                                         String store = JOptionPane.showInputDialog(null, "Please type the name of the store you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductStore(newMarket, store);
-                                    } else if (choice == 3) {
+                                    } else if (choiceNum == 3) {
                                         String description = JOptionPane.showInputDialog(null, "Please type the part of a description you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
                                         (customers.get(username)).searchProductDescription(newMarket, description);
@@ -188,7 +190,7 @@ public class Marketplace {
                                     JOptionPane.showMessageDialog(null, "Please enter a valid input", "Error",
                                             JOptionPane.ERROR_MESSAGE);
                             }
-                        } while (selection != 4);
+                        } while (selectionNum != 4);
                     } else {
                         JOptionPane.showMessageDialog(null, "Login failed!", "Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -268,12 +270,12 @@ public class Marketplace {
                                 //Edit/Delete product
                                 case 2:
                                     String [] optionsArray = {"1. Edit","2. Delete"};
-                                    int choice = (int) JOptionPane.showInputDialog(null, "What would you like to do?",
+                                    String choice = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                         "Update Product", JOptionPane.QUESTION_MESSAGE,
                                         null, optionsArray, optionsArray[0]);
-
+                                    int choiceNum = Integer.parseInt(String.valueOf(choice.charAt(0)));
                                     //Edit product (deletes, then adds with changes)
-                                    if (choice == 1) {
+                                    if (choiceNum == 1) {
                                         String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
                                         String editProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
                                                 "Update Product", JOptionPane.QUESTION_MESSAGE,
@@ -307,7 +309,7 @@ public class Marketplace {
                                                     JOptionPane.ERROR_MESSAGE);
                                         }
                                         //Deletes product
-                                    } else if (choice == 2) {
+                                    } else if (choiceNum == 2) {
                                         String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
                                         String unwantedProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
                                                 "Update Product", JOptionPane.QUESTION_MESSAGE,
