@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,9 +24,14 @@ public class SellersDashboard {
     //stores - each store index corresponds to a new store
 
     public void viewDashboard() throws IOException {
-        System.out.println("Dashboard:" + "\n");
+
+
+        String dashboardString = "";
         for (int i = 0; i < stores.length; i++) {
-            System.out.println("Store:" + stores[i] + "\n");
+            String storeList = "";
+            String customerData = "";
+            String productData = "";
+            storeList += "Store: " + stores[i] + "\n";
 
             BufferedReader br = new BufferedReader(new FileReader("purchased.txt"));
             String line;
@@ -43,18 +49,18 @@ public class SellersDashboard {
             }
 
             String[] customers = customerList.toArray(new String[0]);
-            System.out.println("Customer Data");
+            customerData = "Customer Data\n";
             String[] itemsCount = itemsSold.toArray(new String[0]);
             String[] storeProducts = products.toArray(new String[0]);
             boolean printJ = false;
             for (int j = 0; j < customers.length; j++) {
-                System.out.println("Customer:" + customers[j] + "Items Purchased: " + itemsCount[j]);
+                customerData += "Customer:" + customers[j] + "Items Purchased: " + itemsCount[j] + "\n";
                 printJ = true;
             }
             if (!printJ) {
-                System.out.println("~No Customer Data~");
+                customerData += "~No Customer Data~";
             }
-            System.out.println("\nProduct Data");
+            productData = "\nProduct Data\n";
             boolean printK = false;
             for (int k = 0; k < storeProducts.length; k++) {
                 int soldCount = 0;
@@ -66,13 +72,19 @@ public class SellersDashboard {
                         soldCount += parseInt(splitLineSC[3]);
                     }
                 }
-                System.out.println("Product:" + storeProducts[k] + "Number of Sales: " + soldCount);
+                productData = "Product:" + storeProducts[k] + "Number of Sales: " + soldCount + "\n";
                 printK = true;
             }
             if (!printK) {
-                System.out.println("~No Product Data~");
+                productData += "~No Product Data~\n";
             }
-            System.out.println("\n");
+            dashboardString += storeList + customerData + productData + "\n";
+
         }
+        if (dashboardString.isEmpty()) {
+            dashboardString = "There is no store data.";
+        }
+        JOptionPane.showMessageDialog(null, dashboardString,
+                "Dashboard" , JOptionPane.INFORMATION_MESSAGE);
     }
 }
