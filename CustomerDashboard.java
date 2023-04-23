@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * CustomerDashboard
  *
- * CustomerDahsboard is the interface in which a customer can view much of the data involving:
- * Stores - data including the list of stores and how many products are for sale
- * Products Bought - data including the list of products and the store bought by the customer
+ * CustomerDashboard is the interface in which a customer can view much of the data involving:
+ * Stores - List of stores and how many products are for sale
+ * Products Bought - List of products and the store the customer bought the item at.
  */
 
 public class CustomerDashboard {
@@ -15,32 +15,35 @@ public class CustomerDashboard {
     public String username;
     public String password;
 
+    //Constructor for CustomerDashboard
     public CustomerDashboard(String username, String password) {
         this.username = username;
         this.password = password;
     }
+    //Note that this constructor is never used
 
-    public void viewDashboard(String [] storesList, String [] productsList, String [] productsBought) {
+    public void viewDashboard(String[] storesList, String[] productsList, String[] productsBought) {
         //storesList - each store index corresponds to the productList index
         //productsList - list of products for the store/index
         //productsBought - index separated list of particular products bought by customer (from customers.java)
 
-        //stores by number of products sold (get from sellers.java)
+        //Stores by number of products sold (from sellers.java)
         String dashboardMessage = "Stores: \n";
-        String storeMessage = "";
+        StringBuilder storeMessage = new StringBuilder();
         for (int i = 0; i < storesList.length; i++) {
             List<String> products = Arrays.asList(productsList[i].split(","));
             String[] storeProducts = products.toArray(new String[0]);
-            storeMessage += storesList[i] + " - Number of Products: " +  storeProducts.length + "\n";
+            storeMessage.append(storesList[i]).append(" - Number of Products: ").append(storeProducts.length).append("\n");
         }
-        if (storeMessage.isEmpty()) {
-            storeMessage = "No stores exist.\n";
+        if (storeMessage.length() == 0) {
+            storeMessage = new StringBuilder("No stores exist.\n");
         }
         dashboardMessage += storeMessage + "\n";
-        //stores by products bought
+
+        //Stores by products bought
         dashboardMessage += "Products Bought: \n";
         boolean print = false;
-        String productNums = "";
+        StringBuilder productNums = new StringBuilder();
         for (int i = 0; i < storesList.length; i++) {
             List<String> products = Arrays.asList(productsList[i].split(","));
             String[] storeProducts = products.toArray(new String[0]);
@@ -48,16 +51,22 @@ public class CustomerDashboard {
                 for (int k = 0; k < productsBought.length; k++) {
                     if (productsBought[k].equals(storeProducts[j])) {
                         print = true;
-                        productNums += productsBought[k] + " - " + storesList[i] + "\n";
+                        productNums.append(productsBought[k]).append(" - ").append(storesList[i]).append("\n");
                     }
                 }
             }
         }
         if (!print) {
-            productNums = "None\n";
+            productNums = new StringBuilder("None\n");
+            //This is for situations where no products have been bought
         }
         dashboardMessage += productNums;
         JOptionPane.showMessageDialog(null, dashboardMessage,
-                "Dashboard" , JOptionPane.INFORMATION_MESSAGE);
+                "Dashboard", JOptionPane.INFORMATION_MESSAGE);
+        //This displays the dashboardMessage
     }
+    //Note that this method is never used
+
+    //end of the class
 }
+
