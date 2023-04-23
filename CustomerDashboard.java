@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,15 +26,21 @@ public class CustomerDashboard {
         //productsBought - index separated list of particular products bought by customer (from customers.java)
 
         //stores by number of products sold (get from sellers.java)
-        System.out.println("Stores:");
+        String dashboardMessage = "Stores: \n";
+        String storeMessage = "";
         for (int i = 0; i < storesList.length; i++) {
             List<String> products = Arrays.asList(productsList[i].split(","));
             String[] storeProducts = products.toArray(new String[0]);
-            System.out.println(storesList[i] + " - Number of Products: " +  storeProducts.length);
+            storeMessage += storesList[i] + " - Number of Products: " +  storeProducts.length + "\n";
         }
+        if (storeMessage.isEmpty()) {
+            storeMessage = "No stores exist.\n";
+        }
+        dashboardMessage += storeMessage + "\n";
         //stores by products bought
-        System.out.println("Products Bought:");
+        dashboardMessage += "Products Bought: \n";
         boolean print = false;
+        String productNums = "";
         for (int i = 0; i < storesList.length; i++) {
             List<String> products = Arrays.asList(productsList[i].split(","));
             String[] storeProducts = products.toArray(new String[0]);
@@ -41,13 +48,16 @@ public class CustomerDashboard {
                 for (int k = 0; k < productsBought.length; k++) {
                     if (productsBought[k].equals(storeProducts[j])) {
                         print = true;
-                        System.out.println(productsBought[k] + " - " + storesList[i]);
+                        productNums += productsBought[k] + " - " + storesList[i] + "\n";
                     }
                 }
             }
         }
         if (!print) {
-            System.out.println("None");
+            productNums = "None\n";
         }
+        dashboardMessage += productNums;
+        JOptionPane.showMessageDialog(null, dashboardMessage,
+                "Dashboard" , JOptionPane.INFORMATION_MESSAGE);
     }
 }
