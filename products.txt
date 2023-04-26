@@ -1,2 +1,5 @@
 cedam;beststore;bestproduct;bestest product ever;7;6.97
 cedam;beststore;bestproduct;bestest product ever;3;6.97
+newuser;mybeststore;besteststore;u know;12;1.29
+cedam;beststore;newnew product;the newest the bestest;3;6.69
+cedam;beststore;the best.;blah blah;5;1.99

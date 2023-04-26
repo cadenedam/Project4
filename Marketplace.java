@@ -72,13 +72,13 @@ public class Marketplace {
                                     if (marketplace == null) {
                                         marketplace = "There is nothing currently in the marketplace.";
                                     }
-                                    JOptionPane.showInputDialog(null, marketplace,
+                                    JOptionPane.showMessageDialog(null, marketplace,
                                             "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
 
 
                                     int sort = JOptionPane.showConfirmDialog(null, "Would you like to sort the market at all?",
                                             "View Market", JOptionPane.YES_NO_OPTION);
-                                    if (sort == 1) {
+                                    if (sort == 0) {
                                         String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
 
                                         String sorting = (String) JOptionPane.showInputDialog(null, "Would you like to sort by?",
@@ -113,6 +113,8 @@ public class Marketplace {
                                             JOptionPane.showMessageDialog(null, "That is not a valid choice!", "Error",
                                                     JOptionPane.ERROR_MESSAGE);
                                         }
+                                    } else {
+
                                     }
                                     String selectedProduct = JOptionPane.showInputDialog(null, "Which product would you like to view? (case sensitive)",
                                             "View Market", JOptionPane.QUESTION_MESSAGE);
