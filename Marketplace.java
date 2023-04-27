@@ -6,8 +6,8 @@ import java.util.*;
 public class Marketplace {
 
     public static void main(String[] args) throws IOException {
-        populateHashMaps();
         Scanner scan = new Scanner(System.in);
+        boolean validUser = false;
 
         Socket socket = new Socket("localhost", 4242);
         BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -23,6 +23,7 @@ public class Marketplace {
             //Customer section
             String userType = socketReader.readLine();
             int userNum = Integer.parseInt(userType);
+            boolean loggedIn = false;
 
             switch (userNum) {
                 case 1:
@@ -38,7 +39,7 @@ public class Marketplace {
                     socketWriter.flush();
 
                     String login = socketReader.readLine();
-                    boolean loggedIn = false;
+                    loggedIn = false;
 
                     if (login.equals("loggedIn")) {
                         loggedIn = true;
@@ -156,22 +157,25 @@ public class Marketplace {
                                     if (choiceNum == 1) {
                                         String product = JOptionPane.showInputDialog(null, "Please type the name of the product you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
-                                        (customers.get(username)).searchProductName(newMarket, product);
+                                        socketWriter.write(product);
+                                        socketWriter.println();
                                     } else if (choiceNum == 2) {
                                         String store = JOptionPane.showInputDialog(null, "Please type the name of the store you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
-                                        (customers.get(username)).searchProductStore(newMarket, store);
+                                                socketWriter.write(store);
+                                                socketWriter.println();
                                     } else if (choiceNum == 3) {
                                         String description = JOptionPane.showInputDialog(null, "Please type the part of a description you're searching for:",
                                                 "Search", JOptionPane.QUESTION_MESSAGE);
-                                        (customers.get(username)).searchProductDescription(newMarket, description);
+                                                socketWriter.write(description);
+                                                socketWriter.println();
                                     } else {
                                         JOptionPane.showMessageDialog(null, "That's not a valid option!", "Error",
                                                 JOptionPane.ERROR_MESSAGE);
                                     }
-                                    break;
+                                break;
                                 case 3:
-                                    String purchaseHistory = (customers.get(username)).getPurchaseHistory();
+                                String purchaseHistory = socketReader.readLine();
                                     JOptionPane.showMessageDialog(null, purchaseHistory,
                                             "Purchase History" , JOptionPane.INFORMATION_MESSAGE);
                                     break;
@@ -179,7 +183,7 @@ public class Marketplace {
                                 case 4:
                                     JOptionPane.showMessageDialog(null, "Good Bye!",
                                             "Log Out" , JOptionPane.INFORMATION_MESSAGE);
-                                    break;
+                                break;
                                 default:
                                     JOptionPane.showMessageDialog(null, "Please enter a valid input", "Error",
                                             JOptionPane.ERROR_MESSAGE);
@@ -193,7 +197,7 @@ public class Marketplace {
                 break;
                 case 2:
                                 //Seller section
-                                boolean loggedIn = false;
+                                loggedIn = false;
                                 do {
                                     BufferedReader br = new BufferedReader(new FileReader("users.txt"));
                 
@@ -230,6 +234,8 @@ public class Marketplace {
                                             selection = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                                     "Menu", JOptionPane.QUESTION_MESSAGE,
                                                     null, menuArray, menuArray[0]);
+                                            socketWriter.write(selection);
+                                            socketWriter.println();
                                             selectionNum = Integer.parseInt(String.valueOf(selection.charAt(0)));
                 
                                             switch(selectionNum) {
@@ -237,25 +243,35 @@ public class Marketplace {
                                                 case 1:
                                                     String product = JOptionPane.showInputDialog(null, "What's the name of the product?",
                                                             "Create Product", JOptionPane.QUESTION_MESSAGE);
-                
-                                                    String [] storesArray = ((sellers.get(username)).getStores()).split(", ");
+                                                    socketWriter.write(product);
+                                                    socketWriter.println();
                                                     // mot sure why this is here
                                                     // System.out.println(" (case sensitive)");
+
+                                                    String[] storesArray = (socketReader.readLine()).split(",");
                                                     String productStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
                                                             "Create Product", JOptionPane.QUESTION_MESSAGE, null, storesArray, storesArray[0]);
-                                                    System.out.println(productStore);
-                                                    boolean storeExists = storeExists(productStore);
+
+                                                    socketWriter.write(productStore);
+                                                    socketWriter.println();
+                                                    String storeExists = socketReader.readLine();
                 
-                                                    if (storeExists) {
+                                                    if (storeExists.equals("yes")) {
                                                         //Get all info for product, add product
                                                         String description = JOptionPane.showInputDialog(null, "What's the product description?",
                                                                 "Create Product", JOptionPane.QUESTION_MESSAGE);
+                                                        socketWriter.write(description);
+                                                        socketWriter.println();
+
                                                         int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
                                                                 "Create Product", JOptionPane.QUESTION_MESSAGE));
+                                                        socketWriter.write(quantity);
+                                                        socketWriter.println();
+
                                                         double price = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
                                                                 "Create Product", JOptionPane.QUESTION_MESSAGE));
-                
-                                                        (sellers.get(username)).addProduct(product, productStore, description, quantity, price);
+                                                        socketWriter.write(String.valueOf(price));
+                                                        socketWriter.println();
                                                     } else {
                                                         JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
                                                                 JOptionPane.ERROR_MESSAGE);
@@ -267,48 +283,64 @@ public class Marketplace {
                                                     String choice = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                                         "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                         null, optionsArray, optionsArray[0]);
+                                                    socketWriter.write(choice);
+                                                    socketWriter.println();
+
                                                     int choiceNum = Integer.parseInt(String.valueOf(choice.charAt(0)));
+
                                                     //Edit product (deletes, then adds with changes)
                                                     if (choiceNum == 1) {
-                                                        String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
+                                                        String[] productsArray = socketReader.readLine().split(", ");
                                                         String editProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                                 null, productsArray, productsArray[0]);
+                                                        socketWriter.write(editProduct);
+                                                        socketWriter.println();
                 
                                                         String newProduct = JOptionPane.showInputDialog(null, "What's the name of the product?",
                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE);
-                                                        storesArray = ((sellers.get(username)).getStores()).split(", ");
+                                                        socketWriter.write(newProduct);
+                                                        socketWriter.println();
+
                                                         // mot sure why this is here
                                                         // System.out.println(" (case sensitive)");
+                                                        String[] storesArrays = socketReader.readLine().split(", ");
                                                         String newProductStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
-                                                                "Update Product", JOptionPane.QUESTION_MESSAGE, null, storesArray, storesArray[0]);
+                                                                "Update Product", JOptionPane.QUESTION_MESSAGE, null, storesArrays, storesArrays[0]);
+                                                        socketWriter.write(newProductStore);
+                                                        socketWriter.println();
+                                                        
+                                                        String newStoreExists = socketReader.readLine();
                 
-                
-                                                        boolean newStoreExists = storeExists(newProductStore);
-                
-                                                        if (newStoreExists) {
+                                                        if (newStoreExists.equals("yes")) {
                                                             //Get all info for product, add product
                                                             String newDescription = JOptionPane.showInputDialog(null, "What's the product description?",
                                                                     "Update Product", JOptionPane.QUESTION_MESSAGE);
+                                                            socketWriter.write(newDescription);
+                                                            socketWriter.println();
+
                                                             int newQuantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
                                                                     "Update Product", JOptionPane.QUESTION_MESSAGE));
+                                                            socketWriter.write(newQuantity);
+                                                            socketWriter.println();
+
                                                             double newPrice = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
                                                                     "Update Product", JOptionPane.QUESTION_MESSAGE));
+                                                            socketWriter.write(String.valueOf(newPrice));
+                                                            socketWriter.println();
                 
-                
-                                                            (sellers.get(username)).deleteProduct(editProduct);
-                                                            (sellers.get(username)).addProduct(newProduct, newProductStore, newDescription, newQuantity, newPrice);
                                                         } else {
                                                             JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
                                                                     JOptionPane.ERROR_MESSAGE);
                                                         }
                                                         //Deletes product
                                                     } else if (choiceNum == 2) {
-                                                        String [] productsArray = ((sellers.get(username)).getProducts()).split(", ");
+                                                        String[] productsArray = socketReader.readLine().split(", ");
                                                         String unwantedProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                                 null, productsArray, productsArray[0]);
-                                                        (sellers.get(username)).deleteProduct(unwantedProduct);
+                                                        socketWriter.write(unwantedProduct);
+                                                        socketWriter.println();
                                                     } else {
                                                         JOptionPane.showMessageDialog(null, "Pick a valid number please", "Error",
                                                                 JOptionPane.ERROR_MESSAGE);
@@ -318,17 +350,18 @@ public class Marketplace {
                                                 case 3:
                                                     String storeName = JOptionPane.showInputDialog(null, "What's the name of the store?",
                                                             "Create Store", JOptionPane.QUESTION_MESSAGE);
-                                                    (sellers.get(username)).addStore(storeName);
+                                                    socketWriter.write(storeName);
+                                                    socketWriter.println();
                                                     break;
                                                 //View Stores
                                                 case 4:
-                                                    String allStores = (sellers.get(username)).getStores();
+                                                    String allStores = socketReader.readLine();
                                                     JOptionPane.showMessageDialog(null, allStores,
                                                             "View Stores", JOptionPane.INFORMATION_MESSAGE);
                                                     break;
                                                 //View Seller Dashboard
                                                 case 5:
-                                                    String sellerStores = (sellers.get(username)).getStores();
+                                                    String sellerStores = socketReader.readLine();
                                                     String [] stores = sellerStores.split(", ");
                                                     SellersDashboard sellersDashboard = new SellersDashboard(stores);
                                                     sellersDashboard.viewDashboard();
@@ -351,7 +384,7 @@ public class Marketplace {
                                 } while (!loggedIn);
                 break;
                 case 3:
-                //User creation system
+                //User creation system NEEDS TO BE TRANSFERRED TO SERVER SIDE
                 //Add new user authentication?
                 boolean userTaken;
                 String username;
@@ -378,7 +411,7 @@ public class Marketplace {
                 String password = JOptionPane.showInputDialog(null, "Please enter a password:",
                         "Create Account", JOptionPane.QUESTION_MESSAGE);
                 String[] userTypeArray = {"1. Customer", "2. Seller"};
-                String userType = (String) JOptionPane.showInputDialog(null, "\"Are you a...",
+                String userTypeNew = (String) JOptionPane.showInputDialog(null, "\"Are you a...",
                         "Create Account", JOptionPane.QUESTION_MESSAGE, null, userTypeArray, userTypeArray[0]);
                 int userTypeNum = Integer.parseInt(String.valueOf(userType.charAt(0)));
                 if (userTypeNum == 1) {
@@ -402,23 +435,6 @@ public class Marketplace {
         } while (!validUser);
     }
 
-    public static boolean storeExists(String store) throws IOException{
-        boolean storeExists = false;
-        BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
-        String line = br.readLine();
-
-        while (line != null) {
-            String[] splitLine = line.split(";");
-            if (splitLine[1].equals(store)) {
-                storeExists = true;
-            }
-            line = br.readLine();
-        }
-        return storeExists;
-    }
-
-    //Creates new users and adds them to hashmaps
-    //EVENTUALLY get rid of file system, authenticate with hashmaps instead
     public static void addUser(String userType, String username, String password) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("users.txt", true), true);
         pw.write(userType + ";" + username + ";" + password);
@@ -429,26 +445,8 @@ public class Marketplace {
         //and the specified user profile
         if (userType.equals("Seller")) {
             Sellers newSeller = new Sellers(username, password);
-            sellers.put(username, newSeller);
         } else {
             Customers newCustomer = new Customers(username, password);
-            customers.put(username, newCustomer);
-        }
-    }
-
-    public static void populateHashMaps() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
-        String line = br.readLine();
-
-        while (line != null) {
-            String[] splitLine = line.split(";");
-
-            if (splitLine[0].equals("Seller")) {
-                sellers.put(splitLine[1], new Sellers(splitLine[1], splitLine[2]));
-            } else {
-                customers.put(splitLine[1], new Customers(splitLine[1], splitLine[2]));
-            }
-            line = br.readLine();
         }
     }
 }
