@@ -115,7 +115,8 @@ public class Sellers extends Selection{
 
     //This method returns a String with all the stores from stores.txt
     public String getStores() throws IOException {
-        StringBuilder sellerStores = new StringBuilder();
+        ArrayList<String> sellerStores = new ArrayList<String>();
+        String allStores = "";
         BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
         String line = br.readLine();
         int counter = 0;
@@ -123,17 +124,21 @@ public class Sellers extends Selection{
         while (line != null) {
             String[] splitLine = line.split(";");
             if (splitLine[0].equals(username) && counter > 0) {
-                sellerStores.append(", ").append(splitLine[1]);
+                sellerStores.add(", " + splitLine[1]);
                 //This creates a comma separated StringBuilder with the stores in stores.txt
             } else if (splitLine[0].equals(username)) {
-                sellerStores.append(splitLine[1]);
+                sellerStores.add(splitLine[1]);
                 counter++;
                 //This adds the store (1st element of the stores.txt line)
                 //to the sellerStores StringBuilder.
             }
             line = br.readLine();
         }
-        return sellerStores.toString();
+
+        for (int i = 0; i < sellerStores.size(); i++) {
+            allStores = allStores + sellerStores.get(i);
+        }
+        return allStores;
     }
 
     //A getter that relays the username
