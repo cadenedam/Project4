@@ -117,6 +117,7 @@ public class Sellers extends Selection{
     public String getStores() throws IOException {
         ArrayList<String> sellerStores = new ArrayList<String>();
         String allStores = "";
+        //This string contains the names of all the stores
         BufferedReader br = new BufferedReader(new FileReader("stores.txt"));
         String line = br.readLine();
         int counter = 0;
@@ -125,12 +126,12 @@ public class Sellers extends Selection{
             String[] splitLine = line.split(";");
             if (splitLine[0].equals(username) && counter > 0) {
                 sellerStores.add(", " + splitLine[1]);
-                //This creates a comma separated StringBuilder with the stores in stores.txt
+                //This creates a comma separated ArrayList with the stores in stores.txt as its indexes
             } else if (splitLine[0].equals(username)) {
                 sellerStores.add(splitLine[1]);
                 counter++;
-                //This adds the store (1st element of the stores.txt line)
-                //to the sellerStores StringBuilder.
+                //This adds the store (2nd element of the stores.txt line)
+                //to the sellerStores ArrayList.
             }
             line = br.readLine();
         }
@@ -138,6 +139,8 @@ public class Sellers extends Selection{
         for (int i = 0; i < sellerStores.size(); i++) {
             allStores = allStores + sellerStores.get(i);
         }
+        //This loop will add all the stores from the sellerStores ArrayList into the string
+        //allStores. allStores contains the names of all the stores.
         return allStores;
     }
 
