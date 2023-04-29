@@ -22,6 +22,11 @@ public class MarketRun extends Thread implements Runnable {
     }
 
     public void run() {
+        try {
+            populateHashMaps();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while (running) {
             try {
                 String user = "";
@@ -256,7 +261,8 @@ public class MarketRun extends Thread implements Runnable {
                                         //Edit/Delete product
                                         case 2:
                                             String choice = socketReader.readUTF();
-                                            int choiceNum = Integer.parseInt(choice);
+                                            String[] choiceSplit = choice.split(". ");
+                                            int choiceNum = Integer.parseInt(choiceSplit[0]);
                                             
                                             // Edit product (deletes, then adds with changes)
                                             if (choiceNum == 1) {
@@ -562,6 +568,22 @@ public class MarketRun extends Thread implements Runnable {
                 } else {
                     Customers newCustomer = new Customers(username, password);
                     customers.put(username, newCustomer);
+                }
+            }
+
+            public static void populateHashMaps() throws IOException {
+                BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                String line = br.readLine();
+        
+                while (line != null) {
+                    String[] splitLine = line.split(";");
+        
+                    if (splitLine[0].equals("Seller")) {
+                        sellers.put(splitLine[1], new Sellers(splitLine[1], splitLine[2]));
+                    } else {
+                        customers.put(splitLine[1], new Customers(splitLine[1], splitLine[2]));
+                    }
+                    line = br.readLine();
                 }
             }
 }
