@@ -1,32 +1,36 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.lang.Runnable;
 
 public class Marketplace {
     
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket("localhost", 4242);
-        Scanner scan = new Scanner(System.in);
-        BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter socketWriter = new PrintWriter(socket.getOutputStream(), true);
+        DataInputStream socketReader = new DataInputStream(socket.getInputStream());
+        DataOutputStream socketWriter = new DataOutputStream(socket.getOutputStream());
 
-        Thread thread = new Thread(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
                     boolean validUser = false;
                     do {
-                        String [] marketMenuArray = {"1. Customer", "2. Seller", "3. Create Account"};
+                        String [] marketMenuArray = {"Customer", "Seller", "Create Account"};
                         String user = (String) JOptionPane.showInputDialog(null, "Are you a customer or a seller?",
                                 "Welcome to the Marketplace!", JOptionPane.QUESTION_MESSAGE,
                                 null, marketMenuArray, marketMenuArray[0]);
-                        String[] userSplit = user.split(". ");
-                        String userSelection = userSplit[0];
-                        socketWriter.write(userSelection);
-                        socketWriter.println();
+                        socketWriter.writeUTF("Seller");
+                        socketWriter.flush();
             
                         //Customer section
-                        int userNum = Integer.parseInt(userSelection);
+                        int userNum = 0;
+                        if (user != null && user.equalsIgnoreCase("Customer")) {
+                            userNum = 1;
+                        } else if (user != null && user.equalsIgnoreCase("Seller")) {
+                            userNum = 2;
+                        } else if (user != null && user.equalsIgnoreCase("Create Account")) {
+                            userNum = 3;
+                        }
                         boolean loggedIn = false;
             
                         switch (userNum) {
@@ -38,11 +42,9 @@ public class Marketplace {
                                         "Log In", JOptionPane.QUESTION_MESSAGE);
             
                                 //User authentication (goes to server)
-                                socketWriter.write(username + ";" + password);
-                                socketWriter.println();
-                                socketWriter.flush();
+                                socketWriter.writeUTF(username + ";" + password);
             
-                                String login = socketReader.readLine();
+                                String login = socketReader.readUTF();
                                 loggedIn = false;
             
                                 if (login.equals("loggedIn")) {
@@ -57,11 +59,10 @@ public class Marketplace {
                                         String selection = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                                 "Menu", JOptionPane.QUESTION_MESSAGE,
                                                 null, menuArray, menuArray[0]);
-                                        socketWriter.write(selection);
-                                        socketWriter.println();
+                                        socketWriter.writeUTF(selection);
                                         selectionNum = Integer.parseInt(selection);
             
-                                        String marketplace = socketReader.readLine();
+                                        String marketplace = socketReader.readUTF();
             
                                         switch (selectionNum) {
                                             //View marketplace
@@ -72,10 +73,8 @@ public class Marketplace {
             
                                                 int sort = JOptionPane.showConfirmDialog(null, "Would you like to sort the market at all?",
                                                         "View Market", JOptionPane.YES_NO_OPTION);
-                                                
-                                                socketWriter.write(sort);
-                                                socketWriter.println();
-                                                socketWriter.flush();
+                                                String sortString = String.valueOf(sort);
+                                                socketWriter.writeUTF(sortString);
             
                                                 if (sort == 0) {
                                                     String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
@@ -84,17 +83,15 @@ public class Marketplace {
                                                             "View Market", JOptionPane.QUESTION_MESSAGE,
                                                             null, sortArray, sortArray[0]);
                                                     int sortingNum = Integer.parseInt(String.valueOf(sorting.charAt(0)));
-                                                    socketWriter.write(sortingNum);
-                                                    socketWriter.println();
-                                                    socketWriter.flush();
+                                                    socketWriter.writeUTF(sorting);
             
                                                     if (sortingNum == 1) {
-                                                        marketplace = socketReader.readLine();
+                                                        marketplace = socketReader.readUTF();
                                                         JOptionPane.showInputDialog(null, marketplace,
                                                                 "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
             
                                                     } else if (sortingNum == 2) {
-                                                        marketplace = socketReader.readLine();
+                                                        marketplace = socketReader.readUTF();
                                                         JOptionPane.showInputDialog(null, marketplace,
                                                                 "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
             
@@ -108,11 +105,9 @@ public class Marketplace {
             
                                                 String selectedProduct = JOptionPane.showInputDialog(null, "Which product would you like to view? (case sensitive)",
                                                         "View Market", JOptionPane.QUESTION_MESSAGE);
-                                                socketWriter.write(selectedProduct);
-                                                socketWriter.println();
-                                                socketWriter.flush();
+                                                socketWriter.writeUTF(selectedProduct);
             
-                                                String viewProduct = socketReader.readLine();
+                                                String viewProduct = socketReader.readUTF();
                                                 int purchasing = 0;
             
                                                 if (!viewProduct.isEmpty()) {
@@ -121,16 +116,17 @@ public class Marketplace {
                                                     purchasing = JOptionPane.showConfirmDialog(null, "Would you like to purchase this product?",
                                                             "View Market", JOptionPane.YES_NO_OPTION);
             
-                                                    socketWriter.write(purchasing);
-                                                    socketWriter.println();
+                                                    String purchasingString = String.valueOf(purchasing);
+                                                    socketWriter.writeUTF(purchasingString);
             
                                                     if (purchasing == 1) {
                                                         int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many?",
                                                                 "View Market", JOptionPane.QUESTION_MESSAGE));
-                                                        socketWriter.write(quantity);
-                                                        socketWriter.println();
+
+                                                        String quantityString = String.valueOf(quantity);
+                                                        socketWriter.writeUTF(quantityString);
             
-                                                        String available = socketReader.readLine();
+                                                        String available = socketReader.readUTF();
             
                                                         if (available.equals("yes")) {
                                                             JOptionPane.showMessageDialog(null, "Success!", "Buy Product", JOptionPane.INFORMATION_MESSAGE);
@@ -154,31 +150,27 @@ public class Marketplace {
                                                         "Search", JOptionPane.QUESTION_MESSAGE,
                                                         null, searchArray, searchArray[0]);
                                                 int choiceNum = Integer.parseInt(String.valueOf(choice.charAt(0)));
-                                                socketWriter.write(choiceNum);
-                                                socketWriter.println();
+                                                socketWriter.writeUTF(choice);
                                                 
                                                 if (choiceNum == 1) {
                                                     String product = JOptionPane.showInputDialog(null, "Please type the name of the product you're searching for:",
                                                             "Search", JOptionPane.QUESTION_MESSAGE);
-                                                    socketWriter.write(product);
-                                                    socketWriter.println();
+                                                    socketWriter.writeUTF(product);
                                                 } else if (choiceNum == 2) {
                                                     String store = JOptionPane.showInputDialog(null, "Please type the name of the store you're searching for:",
                                                             "Search", JOptionPane.QUESTION_MESSAGE);
-                                                            socketWriter.write(store);
-                                                            socketWriter.println();
+                                                            socketWriter.writeUTF(store);
                                                 } else if (choiceNum == 3) {
                                                     String description = JOptionPane.showInputDialog(null, "Please type the part of a description you're searching for:",
                                                             "Search", JOptionPane.QUESTION_MESSAGE);
-                                                            socketWriter.write(description);
-                                                            socketWriter.println();
+                                                            socketWriter.writeUTF(description);
                                                 } else {
                                                     JOptionPane.showMessageDialog(null, "That's not a valid option!", "Error",
                                                             JOptionPane.ERROR_MESSAGE);
                                                 }
                                             break;
                                             case 3:
-                                            String purchaseHistory = socketReader.readLine();
+                                            String purchaseHistory = socketReader.readUTF();
                                                 JOptionPane.showMessageDialog(null, purchaseHistory,
                                                         "Purchase History" , JOptionPane.INFORMATION_MESSAGE);
                                                 break;
@@ -207,12 +199,10 @@ public class Marketplace {
                                                 String password = JOptionPane.showInputDialog(null, "Enter password:",
                                                         "Log In", JOptionPane.QUESTION_MESSAGE);
                                                 
-                                                socketWriter.write(username);
-                                                socketWriter.println();
-                                                socketWriter.write(password);
-                                                socketWriter.println();
+                                                socketWriter.writeUTF(username);
+                                                socketWriter.writeUTF(password);
             
-                                                String authentication = socketReader.readLine();
+                                                String authentication = socketReader.readUTF();
                                                 if (authentication.equals("loggedIn")) {
                                                     loggedIn = true;
                                                     validUser = true;
@@ -229,8 +219,7 @@ public class Marketplace {
                                                                 null, menuArray, menuArray[0]);
                                                         String[] selectionSplit = selection.split(". ");
                                                         String selectionNumber = selectionSplit[0];
-                                                        socketWriter.write(selectionNumber);
-                                                        socketWriter.println();
+                                                        socketWriter.writeUTF(selectionNumber);
                                                         selectionNum = Integer.parseInt(String.valueOf(selection.charAt(0)));
                             
                                                         switch(selectionNum) {
@@ -238,35 +227,32 @@ public class Marketplace {
                                                             case 1:
                                                                 String product = JOptionPane.showInputDialog(null, "What's the name of the product?",
                                                                         "Create Product", JOptionPane.QUESTION_MESSAGE);
-                                                                socketWriter.write(product);
-                                                                socketWriter.println();
+                                                                socketWriter.writeUTF(product);
                                                                 // mot sure why this is here
                                                                 // System.out.println(" (case sensitive)");
             
-                                                                String[] storesArray = (socketReader.readLine()).split(",");
+                                                                String[] storesArray = (socketReader.readUTF()).split(",");
                                                                 String productStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
                                                                         "Create Product", JOptionPane.QUESTION_MESSAGE, null, storesArray, storesArray[0]);
             
-                                                                socketWriter.write(productStore);
-                                                                socketWriter.println();
-                                                                String storeExists = socketReader.readLine();
+                                                                socketWriter.writeUTF(productStore);
+                                                                String storeExists = socketReader.readUTF();
                             
                                                                 if (storeExists.equals("yes")) {
                                                                     //Get all info for product, add product
                                                                     String description = JOptionPane.showInputDialog(null, "What's the product description?",
                                                                             "Create Product", JOptionPane.QUESTION_MESSAGE);
-                                                                    socketWriter.write(description);
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(description);
             
                                                                     int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
                                                                             "Create Product", JOptionPane.QUESTION_MESSAGE));
-                                                                    socketWriter.write(quantity);
-                                                                    socketWriter.println();
+
+                                                                    String quantityString = String.valueOf(quantity);
+                                                                    socketWriter.writeUTF(quantityString);
             
                                                                     double price = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
                                                                             "Create Product", JOptionPane.QUESTION_MESSAGE));
-                                                                    socketWriter.write(String.valueOf(price));
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(String.valueOf(price));
                                                                 } else {
                                                                     JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
                                                                             JOptionPane.ERROR_MESSAGE);
@@ -278,51 +264,44 @@ public class Marketplace {
                                                                 String choice = (String) JOptionPane.showInputDialog(null, "What would you like to do?",
                                                                     "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                                     null, optionsArray, optionsArray[0]);
-                                                                socketWriter.write(choice);
-                                                                socketWriter.println();
+                                                                socketWriter.writeUTF(choice);
             
                                                                 int choiceNum = Integer.parseInt(String.valueOf(choice.charAt(0)));
             
                                                                 //Edit product (deletes, then adds with changes)
                                                                 if (choiceNum == 1) {
-                                                                    String[] productsArray = socketReader.readLine().split(", ");
+                                                                    String[] productsArray = socketReader.readUTF().split(", ");
                                                                     String editProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
                                                                             "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                                             null, productsArray, productsArray[0]);
-                                                                    socketWriter.write(editProduct);
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(editProduct);
                             
                                                                     String newProduct = JOptionPane.showInputDialog(null, "What's the name of the product?",
                                                                             "Update Product", JOptionPane.QUESTION_MESSAGE);
-                                                                    socketWriter.write(newProduct);
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(newProduct);
             
                                                                     // mot sure why this is here
                                                                     // System.out.println(" (case sensitive)");
-                                                                    String[] storesArrays = socketReader.readLine().split(", ");
+                                                                    String[] storesArrays = socketReader.readUTF().split(", ");
                                                                     String newProductStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
                                                                             "Update Product", JOptionPane.QUESTION_MESSAGE, null, storesArrays, storesArrays[0]);
-                                                                    socketWriter.write(newProductStore);
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(newProductStore);
                                                                     
-                                                                    String newStoreExists = socketReader.readLine();
+                                                                    String newStoreExists = socketReader.readUTF();
                             
                                                                     if (newStoreExists.equals("yes")) {
                                                                         //Get all info for product, add product
                                                                         String newDescription = JOptionPane.showInputDialog(null, "What's the product description?",
                                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE);
-                                                                        socketWriter.write(newDescription);
-                                                                        socketWriter.println();
+                                                                        socketWriter.writeUTF(newDescription);
             
                                                                         int newQuantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many are available?",
                                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE));
-                                                                        socketWriter.write(newQuantity);
-                                                                        socketWriter.println();
+                                                                        socketWriter.writeUTF(String.valueOf(newQuantity));
             
                                                                         double newPrice = Double.parseDouble(JOptionPane.showInputDialog(null, "How much does it cost?",
                                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE));
-                                                                        socketWriter.write(String.valueOf(newPrice));
-                                                                        socketWriter.println();
+                                                                        socketWriter.writeUTF(String.valueOf(newPrice));
                             
                                                                     } else {
                                                                         JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
@@ -330,12 +309,11 @@ public class Marketplace {
                                                                     }
                                                                     //Deletes product
                                                                 } else if (choiceNum == 2) {
-                                                                    String[] productsArray = socketReader.readLine().split(", ");
+                                                                    String[] productsArray = socketReader.readUTF().split(", ");
                                                                     String unwantedProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
                                                                             "Update Product", JOptionPane.QUESTION_MESSAGE,
                                                                             null, productsArray, productsArray[0]);
-                                                                    socketWriter.write(unwantedProduct);
-                                                                    socketWriter.println();
+                                                                    socketWriter.writeUTF(unwantedProduct);
                                                                 } else {
                                                                     JOptionPane.showMessageDialog(null, "Pick a valid number please", "Error",
                                                                             JOptionPane.ERROR_MESSAGE);
@@ -345,18 +323,17 @@ public class Marketplace {
                                                             case 3:
                                                                 String storeName = JOptionPane.showInputDialog(null, "What's the name of the store?",
                                                                         "Create Store", JOptionPane.QUESTION_MESSAGE);
-                                                                socketWriter.write(storeName);
-                                                                socketWriter.println();
+                                                                socketWriter.writeUTF(storeName);
                                                                 break;
                                                             //View Stores
                                                             case 4:
-                                                                String allStores = socketReader.readLine();
+                                                                String allStores = socketReader.readUTF();
                                                                 JOptionPane.showMessageDialog(null, allStores,
                                                                         "View Stores", JOptionPane.INFORMATION_MESSAGE);
                                                                 break;
                                                             //View Seller Dashboard
                                                             case 5:
-                                                                String sellerStores = socketReader.readLine();
+                                                                String sellerStores = socketReader.readUTF();
                                                                 String [] stores = sellerStores.split(", ");
                                                                 SellersDashboard sellersDashboard = new SellersDashboard(stores);
                                                                 sellersDashboard.viewDashboard();
@@ -430,11 +407,23 @@ public class Marketplace {
                     } while (!validUser);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        if (socketWriter != null) {
+                            socketWriter.close();
+                        }
+                        if (socketReader != null) {
+                            socketReader.close();
+                        }
+                        if (socket != null) {
+                            socket.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
-        thread.start();
-        socket.close();
     }
 
     public static void addUser(String userType, String username, String password) throws IOException {
