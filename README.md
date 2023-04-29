@@ -1,5 +1,9 @@
 <b>To-do</b>
 
+<u>EVERYTHING IN SELLER SECTION WORKS EXCEPT SELLER DASHBOARD</u>
+
+
+
 - program closes when "x" button is clicked
 
 - let customer purchase product (currently goes to "ok!" and exits)
