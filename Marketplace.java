@@ -19,7 +19,7 @@ public class Marketplace {
                         String user = (String) JOptionPane.showInputDialog(null, "Are you a customer or a seller?",
                                 "Welcome to the Marketplace!", JOptionPane.QUESTION_MESSAGE,
                                 null, marketMenuArray, marketMenuArray[0]);
-                        socketWriter.writeUTF("Seller");
+                        socketWriter.writeUTF(user);
                         socketWriter.flush();
             
                         //Customer section
@@ -35,21 +35,21 @@ public class Marketplace {
             
                         switch (userNum) {
                             case 1:
-                            do {
-                                String username = JOptionPane.showInputDialog(null, "Enter username:",
-                                        "Log In", JOptionPane.QUESTION_MESSAGE);
-                                String password = JOptionPane.showInputDialog(null, "Enter password:",
-                                        "Log In", JOptionPane.QUESTION_MESSAGE);
-            
-                                //User authentication (goes to server)
-                                socketWriter.writeUTF(username + ";" + password);
-            
-                                String login = socketReader.readUTF();
                                 loggedIn = false;
+                                do {
+                                    String username = JOptionPane.showInputDialog(null, "Enter username:",
+                                                        "Log In", JOptionPane.QUESTION_MESSAGE);
+                                    String password = JOptionPane.showInputDialog(null, "Enter password:",
+                                                        "Log In", JOptionPane.QUESTION_MESSAGE);
+                                                
+                                    socketWriter.writeUTF(username);
+                                    socketWriter.writeUTF(password);
             
-                                if (login.equals("loggedIn")) {
-                                    loggedIn = true;
-                                }
+                                    String authentication = socketReader.readUTF();
+                                    if (authentication.equals("loggedIn")) {
+                                        loggedIn = true;
+                                        validUser = true;
+                                    }
             
                                 //Customer homepage
                                 if (loggedIn) {
@@ -60,13 +60,13 @@ public class Marketplace {
                                                 "Menu", JOptionPane.QUESTION_MESSAGE,
                                                 null, menuArray, menuArray[0]);
                                         socketWriter.writeUTF(selection);
-                                        selectionNum = Integer.parseInt(selection);
-            
-                                        String marketplace = socketReader.readUTF();
+                                        String[] selectionSplit = selection.split(". ");
+                                        selectionNum = Integer.parseInt(selectionSplit[0]);
             
                                         switch (selectionNum) {
                                             //View marketplace
                                             case 1:
+                                                String marketplace = socketReader.readUTF();
                                                 JOptionPane.showMessageDialog(null, marketplace,
                                                         "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
             

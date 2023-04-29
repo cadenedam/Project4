@@ -48,13 +48,12 @@ public class MarketRun extends Thread implements Runnable {
         
                     if (userNum == 1) {
                         boolean loggedIn = false;
-                        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
                         do {
-                            //User authentication (goes through users.txt file, validates password)
-                            String userInfo = socketReader.readUTF();
-                            String[] parsedInfo = userInfo.split(";");
-                            String username = parsedInfo[0];
-                            String password = parsedInfo[1];
+                            BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+                            String username = socketReader.readUTF();
+                            String password = socketReader.readUTF();
+        
+                            //User authentication (goes through users.txt file, validates password) PROGRAM QUITS AFTER AUTHENTICATION
                             String line;
                             try {
                                 line = br.readLine();
@@ -64,12 +63,13 @@ public class MarketRun extends Thread implements Runnable {
                                         if (lineSplit[2].equals(password)) {
                                             loggedIn = true;
                                             validUser[0] = true;
+                                            socketWriter.writeUTF("loggedIn");
                                         }
                                     }
                                     line = br.readLine();
                                 }
                             } catch (IOException e) {
-                                e.printStackTrace(); // don't know if I need to do an error message?
+                                e.printStackTrace();
                             }
         
                             if (loggedIn) {
@@ -83,7 +83,8 @@ public class MarketRun extends Thread implements Runnable {
                                 int selectionNum = 0;
                                 do {
                                     String selectionInfo = socketReader.readUTF();
-                                    selectionNum = Integer.parseInt(selectionInfo);
+                                    String[] selectionSplit = selectionInfo.split(". ");
+                                    selectionNum = Integer.parseInt(selectionSplit[0]);
         
                                     switch (selectionNum) {
                                         //View marketplace
