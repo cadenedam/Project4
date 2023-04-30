@@ -23,8 +23,6 @@ public class MarketServer {
 
     private static List<Thread> threads = new ArrayList<>();
     private MarketServer server;
-    public static HashMap <String, Sellers> sellers = new HashMap<String, Sellers>();
-    public static HashMap <String, Customers> customers = new HashMap<String, Customers>();
 
     public MarketServer(int port) {
         this.server = this;
@@ -35,8 +33,7 @@ public class MarketServer {
         ServerSocket serverSocket = new ServerSocket(port);
         //This creates the serverSocket
 
-        populateHashMaps();
-        //This provides information about the sellers and customers, like their username and password
+        //Creates a new instance of MarketServer class, connecting to serverSocket
         MarketServer server = new MarketServer(port);
 
         while (true) {
@@ -60,28 +57,6 @@ public class MarketServer {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static void populateHashMaps() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("users.txt"));
-        String line = br.readLine();
-        //Reads through the users.txt file to grab information about the user(s)
-
-        while (line != null) {
-            String[] splitLine = line.split(";");
-
-            if (splitLine[0].equals("Seller")) {
-                sellers.put(splitLine[1], new Sellers(splitLine[1], splitLine[2]));
-                //This grabs the Seller's username and password
-            } else {
-                customers.put(splitLine[1], new Customers(splitLine[1], splitLine[2]));
-                //This grabs the Customer's username and password
-                //The only types of users possible are Seller or Customer, so additional
-                //conditional statements are unnecessary
-            }
-            line = br.readLine();
-            br.close();
         }
     }
 
