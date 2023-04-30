@@ -342,7 +342,10 @@ public class Marketplace {
                                                                 String sellerStores = socketReader.readUTF();
                                                                 String [] stores = sellerStores.split(", ");
                                                                 SellersDashboard sellersDashboard = new SellersDashboard(stores);
-                                                                sellersDashboard.viewDashboard();
+                                                                String dashboard;
+                                                                dashboard = sellersDashboard.viewDashboard();
+                                                                JOptionPane.showMessageDialog(null, dashboard,
+                                                                        "Dashboard", JOptionPane.INFORMATION_MESSAGE);
                                                                 break;
                                                             //Logout
                                                             case 6:

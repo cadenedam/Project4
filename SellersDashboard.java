@@ -29,16 +29,17 @@ public class SellersDashboard {
     }
     //stores - each store index corresponds to a new store
 
-    public void viewDashboard() throws IOException {
-        String dashboardString = "";
+    public String viewDashboard() throws IOException {
+        StringBuilder dashboardString = new StringBuilder();
+        //String for output of dashboard via GUI
         for (int i = 0; i < stores.length; i++) {
-            String storeList = "";
-            String customerData = "";
-            String productData = "";
+            String storeList;
+            StringBuilder customerData = new StringBuilder();
+            StringBuilder productData = new StringBuilder();
 
-            storeList += "Store: " + stores[i];
+            storeList = "Store: " + stores[i];
             //String with the name of the name of the store in the
-            // ith position of Array stores.
+            //ith position of Array stores.
 
             BufferedReader br = new BufferedReader(new FileReader("purchased.txt"));
             String line;
@@ -60,23 +61,22 @@ public class SellersDashboard {
                     //This adds the product purchased
                 }
             }
-            br.close();
 
             String[] customers = customerList.toArray(new String[0]);
-            customerData = "Customer Data\n";
+            customerData = new StringBuilder("Customer Data\n");
             String[] itemsCount = itemsSold.toArray(new String[0]);
             String[] storeProducts = products.toArray(new String[0]);
             boolean printJ = false;
             for (int j = 0; j < customers.length; j++) {
-                customerData += "Customer:" + customers[j] + "Items Purchased: " + itemsCount[j] + "\n";
+                customerData.append("Customer:").append(customers[j]).append("Items Purchased: ").append(itemsCount[j]).append("\n");
                 //This String contains the customer username,
                 // along with the number of items purchased by the customer from purchased.txt.
                 printJ = true;
             }
             if (!printJ) {
-                customerData = "~No Customer Data~";
+                customerData = new StringBuilder("~No Customer Data~");
             }
-            productData = "\nProduct Data\n";
+            productData = new StringBuilder("\nProduct Data\n");
             boolean printK = false;
             for (int k = 0; k < storeProducts.length; k++) {
                 int soldCount = 0;
@@ -89,29 +89,20 @@ public class SellersDashboard {
                     }
                 }
                 sr.close();
-                productData = "Product:" + storeProducts[k] + "Number of Sales: " + soldCount + "\n";
+                productData.append("Product:").append(storeProducts[k]).append("Number of Sales: ").append(soldCount).append("\n");
                 //String with the name of the product, along with the quantity of that product sold.
-                //**Why do we need the number of sales if the number of "Items Purchased" is already displayed??
-
-                //**Note that this was changed based on my interpretation, this description is only accurate
-                //if my interpretation of storeProducts was correct.
-                printK = true;
             }
             if (!printK) {
-                productData = "~No Product Data~\n";
+                productData = new StringBuilder("~No Product Data~\n");
             }
-            dashboardString += storeList + customerData + productData + "\n";
+            dashboardString.append(storeList).append(customerData).append(productData).append("\n");
 
         }
-        if (dashboardString.isEmpty()) {
-            dashboardString = "There is no store data.";
+        if (dashboardString.length() == 0) {
+            dashboardString = new StringBuilder("There is no store data.");
         }
-        JOptionPane.showMessageDialog(null, dashboardString,
-                "Dashboard" , JOptionPane.INFORMATION_MESSAGE);
-        //This displays the dashboard, with the list of stores, customer username,
-        //the number of items the customer purchased, the name of the product,
-        //and the number of those products sold.
+        return(dashboardString.toString());
+        //This returns the string of the SellersDashboard to be viewed in Marketplace
     }
-
     //End of the class
 }
