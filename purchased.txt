@@ -1,2 +1,9 @@
 cadenedam;newproduct;29.99;5
 cadenedam;;newproduct;;2;0.0
+//In the form of:
+//Customer username, store name, product name, description, quantity, price
+
+
+the big times:
+
+what is products supposed to be (from this file)
