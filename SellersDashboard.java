@@ -59,6 +59,7 @@ public class SellersDashboard {
                     products.add(splitLine[2]);
                     //This adds the product purchased
                 }
+                br.close();
             }
 
             String[] customers = customerList.toArray(new String[0]);
@@ -86,6 +87,7 @@ public class SellersDashboard {
                     if (storeProducts[k].equals(splitLineSC[2]) && (stores[i].equals(splitLineSC[1]))) {
                         soldCount += Integer.parseInt(splitLineSC[4]);
                     }
+                    sr.close();
                 }
                 productData = "Product:" + storeProducts[k] + "Number of Sales: " + soldCount + "\n";
                 //String with the name of the product, along with the quantity of that product sold.
