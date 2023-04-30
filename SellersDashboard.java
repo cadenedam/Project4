@@ -30,14 +30,13 @@ public class SellersDashboard {
     //stores - each store index corresponds to a new store
 
     public void viewDashboard() throws IOException {
-
-
         String dashboardString = "";
         for (int i = 0; i < stores.length; i++) {
             String storeList = "";
             String customerData = "";
             String productData = "";
-            storeList += "Store: " + stores[i] + "\n";
+
+            storeList += "Store: " + stores[i];
             //String with the name of the name of the store in the
             // ith position of Array stores.
 
@@ -50,27 +49,15 @@ public class SellersDashboard {
             while ((line = br.readLine()) != null) {
                 splitLine = line.split(";");
                 if (splitLine[1].equals(stores[i])) {
-                    //Changed from [4] to [1]
-                    //[4] is the quantity of the product, [1] is the store name**
-                    //This condition looked wrong:
-                    /*
-                    According to the UpdatePurchaseHistory method in Customers the 2nd element [1]
-                    corresponds to the store name. Index 5 [4] is the quantity.
-                    Please correct me if we have decided to change the formatting of the file, otherwise
-                    I think the wrong index was grabbed. I updated the condition to match my suggestion, but would
-                    appreciate a double-check.
-                     */
 
                     customerList.add(splitLine[0]);
                     //This adds the username of the customer
 
                     itemsSold.add(splitLine[4]);
-                    //Changed from [3] - product description, to [4] - quantity
-                    //Please double check this**
+                    //This adds the quantity of items sold
 
                     products.add(splitLine[2]);
-                    //This adds the name of the store???
-                    //[1] is the name of the store
+                    //This adds the product purchased
                 }
             }
 
@@ -86,7 +73,7 @@ public class SellersDashboard {
                 printJ = true;
             }
             if (!printJ) {
-                customerData += "~No Customer Data~";
+                customerData = "~No Customer Data~";
             }
             productData = "\nProduct Data\n";
             boolean printK = false;
@@ -96,21 +83,8 @@ public class SellersDashboard {
                 String countLine;
                 while ((countLine = sr.readLine()) != null) {
                     String[] splitLineSC = countLine.split(";");
-                    if (storeProducts[k].equals(splitLineSC[2]) && (stores[i].equals(splitLineSC[4]))) {
-                        //If the name of the product equals the kth store in the array of stores, and
-                        //the ith store in the stores Array equals the quantity from the purchased.txt file.
-
-                        //**Please double-check this, I changed it to match my interpretation, but I may
-                        // have miss-read the intention.
-
-                        /*
-                        The second part of the condition does not make sense, why does the ith store
-                        have to equal the quantity purchased of the item? Can this condition be omitted or should
-                        we just amend it. I would really appreciate a second opinion on this.
-                         */
-
-                        soldCount += parseInt(splitLineSC[4]);
-                        //Changed from [3] to [4] since [3] is the description and [4] is the quantity.
+                    if (storeProducts[k].equals(splitLineSC[2]) && (stores[i].equals(splitLineSC[1]))) {
+                        soldCount += Integer.parseInt(splitLineSC[4]);
                     }
                 }
                 productData = "Product:" + storeProducts[k] + "Number of Sales: " + soldCount + "\n";
@@ -122,7 +96,7 @@ public class SellersDashboard {
                 printK = true;
             }
             if (!printK) {
-                productData += "~No Product Data~\n";
+                productData = "~No Product Data~\n";
             }
             dashboardString += storeList + customerData + productData + "\n";
 
@@ -135,15 +109,6 @@ public class SellersDashboard {
         //This displays the dashboard, with the list of stores, customer username,
         //the number of items the customer purchased, the name of the product,
         //and the number of those products sold.
-
-        /*
-        As mentioned above, I've taken the liberty to rearrange some Array indexing so this may be
-        different from what was initially intended. Could someone please take a look through this
-        and make sure that this makes sense. Lastly, as noted before, the "Items the customer purchased"
-        should match up with the "Number of product[i] sold",
-         so I don't understand why we would need to repeat that information.
-
-         */
     }
 
     //End of the class
