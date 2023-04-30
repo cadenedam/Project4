@@ -70,78 +70,84 @@ public class Marketplace {
                                                 JOptionPane.showMessageDialog(null, marketplace,
                                                         "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
             
-            
-                                                int sort = JOptionPane.showConfirmDialog(null, "Would you like to sort the market at all?",
-                                                        "View Market", JOptionPane.YES_NO_OPTION);
-                                                String sortString = String.valueOf(sort);
-                                                socketWriter.writeUTF(sortString);
-            
-                                                if (sort == 0) {
-                                                    String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
-            
-                                                    String sorting = (String) JOptionPane.showInputDialog(null, "Would you like to sort by?",
-                                                            "View Market", JOptionPane.QUESTION_MESSAGE,
-                                                            null, sortArray, sortArray[0]);
-                                                    int sortingNum = Integer.parseInt(String.valueOf(sorting.charAt(0)));
-                                                    socketWriter.writeUTF(sorting);
-            
-                                                    if (sortingNum == 1) {
-                                                        marketplace = socketReader.readUTF();
-                                                        JOptionPane.showInputDialog(null, marketplace,
-                                                                "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
-            
-                                                    } else if (sortingNum == 2) {
-                                                        marketplace = socketReader.readUTF();
-                                                        JOptionPane.showInputDialog(null, marketplace,
-                                                                "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
-            
-                                                    } else {
-                                                        JOptionPane.showMessageDialog(null, "That is not a valid choice!", "Error",
-                                                                JOptionPane.ERROR_MESSAGE);
-                                                    }
-                                                } else {
-                                                    //Write something, continue loop
+                                                boolean marketEmpty = false;
+                                                if (marketplace.equals("There is nothing currently in the marketplace.")) {
+                                                    marketEmpty = true;
                                                 }
             
-                                                String selectedProduct = JOptionPane.showInputDialog(null, "Which product would you like to view? (case sensitive)",
-                                                        "View Market", JOptionPane.QUESTION_MESSAGE);
-                                                socketWriter.writeUTF(selectedProduct);
-            
-                                                String viewProduct = socketReader.readUTF();
-                                                int purchasing = 0;
-            
-                                                if (!viewProduct.isEmpty()) {
-                                                    JOptionPane.showMessageDialog(null, viewProduct,
-                                                            "View Market" , JOptionPane.INFORMATION_MESSAGE);
-                                                    purchasing = JOptionPane.showConfirmDialog(null, "Would you like to purchase this product?",
-                                                            "View Market", JOptionPane.YES_NO_OPTION);
-            
-                                                    String purchasingString = String.valueOf(purchasing);
-                                                    socketWriter.writeUTF(purchasingString);
-            
-                                                    if (purchasing == 1) {
-                                                        int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many?",
-                                                                "View Market", JOptionPane.QUESTION_MESSAGE));
-
-                                                        String quantityString = String.valueOf(quantity);
-                                                        socketWriter.writeUTF(quantityString);
-            
-                                                        String available = socketReader.readUTF();
-            
-                                                        if (available.equals("yes")) {
-                                                            JOptionPane.showMessageDialog(null, "Success!", "Buy Product", JOptionPane.INFORMATION_MESSAGE);
+                                                if (!marketEmpty) {
+                                                    int sort = JOptionPane.showConfirmDialog(null, "Would you like to sort the market at all?",
+                                                    "View Market", JOptionPane.YES_NO_OPTION);
+                                                    String sortString = String.valueOf(sort);
+                                                    socketWriter.writeUTF(sortString);
+        
+                                                    if (sort == 0) {
+                                                        String[] sortArray = new String[]{"1. Price", "2. Quantity available"};
+        
+                                                        String sorting = (String) JOptionPane.showInputDialog(null, "Would you like to sort by?",
+                                                             "View Market", JOptionPane.QUESTION_MESSAGE,
+                                                             null, sortArray, sortArray[0]);
+                                                        int sortingNum = Integer.parseInt(String.valueOf(sorting.charAt(0)));
+                                                        socketWriter.writeUTF(sorting);
+        
+                                                        if (sortingNum == 1) {
+                                                            marketplace = socketReader.readUTF();
+                                                            JOptionPane.showInputDialog(null, marketplace,
+                                                            "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
+        
+                                                        } else if (sortingNum == 2) {
+                                                            marketplace = socketReader.readUTF();
+                                                            JOptionPane.showInputDialog(null, marketplace,
+                                                            "View Market: (product, price, store)", JOptionPane.INFORMATION_MESSAGE);
+        
                                                         } else {
-                                                            JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
+                                                            JOptionPane.showMessageDialog(null, "That is not a valid choice!", "Error",
+                                                                    JOptionPane.ERROR_MESSAGE);
                                                         }
                                                     } else {
-                                                        JOptionPane.showMessageDialog(null, "Ok!",
-                                                                "View Market" , JOptionPane.INFORMATION_MESSAGE);
+                                                        //Write something, continue loop
                                                     }
-                                                } else {
-                                                    JOptionPane.showMessageDialog(null, "No products match that name!", "Error",
-                                                            JOptionPane.ERROR_MESSAGE);
+        
+                                                    String selectedProduct = JOptionPane.showInputDialog(null, "Which product would you like to view? (case sensitive)",
+                                                    "View Market", JOptionPane.QUESTION_MESSAGE);
+                                                    socketWriter.writeUTF(selectedProduct);
+        
+                                                    String viewProduct = socketReader.readUTF();
+                                                    int purchasing = 0;
+        
+                                                    if (!viewProduct.isEmpty()) {
+                                                        JOptionPane.showMessageDialog(null, viewProduct,
+                                                        "View Market" , JOptionPane.INFORMATION_MESSAGE);
+                                                        purchasing = JOptionPane.showConfirmDialog(null, "Would you like to purchase this product?",
+                                                        "View Market", JOptionPane.YES_NO_OPTION);
+        
+                                                        String purchasingString = String.valueOf(purchasing);
+                                                        socketWriter.writeUTF(purchasingString);
+        
+                                                        if (purchasing == 0) {
+                                                            int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "How many?",
+                                                            "View Market", JOptionPane.QUESTION_MESSAGE));
+
+                                                            String quantityString = String.valueOf(quantity);
+                                                            socketWriter.writeUTF(quantityString);
+        
+                                                            String available = socketReader.readUTF();
+        
+                                                            if (available.equals("yes")) {
+                                                                JOptionPane.showMessageDialog(null, "Success!", "Buy Product", JOptionPane.INFORMATION_MESSAGE);
+                                                            } else {
+                                                                JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
+                                                            }
+                                                        } else {
+                                                            JOptionPane.showMessageDialog(null, "Ok!",
+                                                            "View Market" , JOptionPane.INFORMATION_MESSAGE);
+                                                        }
+                                                    } else {
+                                                        JOptionPane.showMessageDialog(null, "No products match that name!", "Error",
+                                                                JOptionPane.ERROR_MESSAGE);
+                                                    }
                                                 }
-            
+                                                
                                                 break;
                                             //Search for product
                                             case 2:

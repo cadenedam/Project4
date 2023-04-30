@@ -35,7 +35,6 @@ public class MarketRun extends Thread implements Runnable {
                     int userNum = 0;
                     if (socketReader.available() > 0) {
                         user = socketReader.readUTF();
-                        System.out.println(user);
                         userNum = 0;
                         if (user.equals("Customer")) {
                             userNum = 1;
@@ -72,12 +71,6 @@ public class MarketRun extends Thread implements Runnable {
                                 e.printStackTrace();
                             }
         
-                            if (loggedIn) {
-                                socketWriter.writeUTF("loggedIn");
-                            } else {
-                                socketWriter.writeUTF("fail");
-                            }
-        
                             //Customer homepage
                             if (loggedIn) {
                                 int selectionNum = 0;
@@ -87,18 +80,20 @@ public class MarketRun extends Thread implements Runnable {
                                     selectionNum = Integer.parseInt(selectionSplit[0]);
         
                                     switch (selectionNum) {
-                                        //View marketplace
+                                        //View marketplace QUITS WHEN VIEW MARKETPLACE
                                         case 1:
                                             ArrayList<String> market = new ArrayList<String>();
-                                            market = printMarket();
-                                            String marketplace = null;
+                                            market = printMarket(); //problem, why?   
+                                            String marketplace = "";
         
                                             for (int i = 0; i < market.size(); i++) {
                                                 marketplace += market.get(i) + "\n";
                                             }
-                                            if (marketplace == null) {
+                                            if (marketplace.equals("")) {
                                                 marketplace = "There is nothing currently in the marketplace.";
                                             }
+
+                                            System.out.println(marketplace);
         
                                             socketWriter.writeUTF(marketplace);
         
@@ -134,29 +129,31 @@ public class MarketRun extends Thread implements Runnable {
         
                                             }
         
-                                            String selectedProduct = socketReader.readUTF();
-                                            String viewProduct = viewProduct(selectedProduct);
-                                            socketWriter.writeUTF(viewProduct);
-                                            int purchasing = 0;
-        
-                                            if (!viewProduct.isEmpty()) {
-                                                purchasing = Integer.parseInt(socketReader.readUTF());
-        
-                                                if (purchasing == 1) {
-                                                    int availableQuantity = checkQuantity(selectedProduct);
-                                                    int quantity = Integer.parseInt(socketReader.readUTF());
-                                                    String available = "no";
-        
-                                                    if (availableQuantity - quantity > 0) {
-                                                        productPurchased(selectedProduct, username, quantity);
-                                                        double price = checkPrice(selectedProduct);
-                                                        String store = checkStore(selectedProduct);
-                                                        String description = checkDescription(selectedProduct);
-                                                        (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
-                                                        available = "yes";
-                                                        socketWriter.writeUTF(available);
-                                                    } else {
-                                                        socketWriter.writeUTF(available);
+                                            if (marketplace != null) {
+                                                String selectedProduct = socketReader.readUTF();
+                                                String viewProduct = viewProduct(selectedProduct);
+                                                socketWriter.writeUTF(viewProduct);
+                                                int purchasing = 0;
+            
+                                                if (!viewProduct.isEmpty()) {
+                                                    purchasing = Integer.parseInt(socketReader.readUTF());
+            
+                                                    if (purchasing == 0) {
+                                                        int availableQuantity = checkQuantity(selectedProduct);
+                                                        int quantity = Integer.parseInt(socketReader.readUTF());
+                                                        String available = "no";
+            
+                                                        if (availableQuantity - quantity >= 0) {
+                                                            productPurchased(selectedProduct, username, quantity);
+                                                            double price = checkPrice(selectedProduct);
+                                                            String store = checkStore(selectedProduct);
+                                                            String description = checkDescription(selectedProduct);
+                                                            (customers.get(username)).updatePurchaseHistory(selectedProduct, store, description, quantity, price);
+                                                            available = "yes";
+                                                            socketWriter.writeUTF(available);
+                                                        } else {
+                                                            socketWriter.writeUTF(available);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -473,7 +470,6 @@ public class MarketRun extends Thread implements Runnable {
     
             public static void productPurchased(String product, String username, int quantity) throws IOException {
                 BufferedReader br = new BufferedReader(new FileReader("products.txt"));
-                PrintWriter pw = new PrintWriter(new FileWriter("purchased.txt", true), true);
                 String line = br.readLine();
                 int newQuantity = 0;
         
@@ -485,9 +481,8 @@ public class MarketRun extends Thread implements Runnable {
                     if (newQuantity > 0 && !product.isEmpty()) {
                         (sellers.get(splitLine[0])).deleteProduct(product);
                         (sellers.get(splitLine[0])).addProduct(splitLine[2], splitLine[1], splitLine[3], newQuantity, Double.parseDouble(splitLine[5]));
-                        pw.write(username + ";" + product + ";" + splitLine[1] + ";" + splitLine[5] + ";" + splitLine[4]);
-                        pw.println();
-                        pw.close();
+                    } else if (newQuantity == 0) {
+                        (sellers.get(splitLine[0])).deleteProduct(product);
                     }
                     line = br.readLine();
                 }

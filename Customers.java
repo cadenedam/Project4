@@ -42,10 +42,10 @@ public class Customers extends Selection {
             String [] arr = line.split(";");
             if (arr[0].equals(username) && purchaseHistory != null) {
                 //makes sure that the username is already in the purchased.txt history
-                purchaseHistory.append(", ").append(arr[2]);
+                purchaseHistory.append("\n").append(arr[2] + ", " + arr[5] + ", " + arr[4]);
             } else if (arr[0].equals(username)) {
                 //the String purchaseHistory can't be null for this
-                purchaseHistory = new StringBuilder(arr[2]);
+                purchaseHistory = new StringBuilder(arr[2] + ", " + arr[5] + ", " + arr[4]);
             }
             line = r.readLine();
         }

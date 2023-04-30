@@ -1,4 +1,6 @@
-cadenedam;newproduct;29.99;5
-cadenedam;;newproduct;;2;0.0
-//In the form of:
-//Customer username, store name, product name, description, quantity, price
+cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+cadenedam;;dog toy;;1;0.0
