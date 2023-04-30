@@ -12,9 +12,6 @@ import java.text.*;
  * stop or stop all threads. Thread thread uses the MarketRun object marketRun
  * for its parameters. Arraylist threads consists of the thread made with marketRun.
  *
- * The populateHashMaps method will grab the username and password
- * of a user from the users.txt file.
- *
  * A new MarketRun object marketRun is created with Socket newSocket, DataInputStream socketReader,
  * DataOutputStream socketWriter, and MarketServer server.
  */
