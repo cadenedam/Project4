@@ -1,1 +1,0 @@
-customer;newstore;newproduct;newproduct description;1;5.29

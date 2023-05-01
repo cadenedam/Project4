@@ -1,2 +1,0 @@
-Seller;cedam;password
-Customer;customer;password
