@@ -3,6 +3,28 @@ import java.io.*;
 import java.net.*;
 import java.lang.Runnable;
 
+/**
+ * Marketplace
+ *
+ * Marketplace is where the majority of our JOptionPanes is implemented,
+ * and it is where the information is written to the server and processed back.
+ * There are two type of users that can access the marketplace: Sellers and Customers.
+ *
+ * If the user does not already have an account they can create a new account (so long as the username is unique).
+ * That new account is added to the list of either sellers or customers.
+ *
+ * Customers can view the marketplace where the available products are displayed, along with details about the product,
+ * the customer can search based on the product name, store it's sold at or the description of the product for it,
+ * review their purchase history until now, or log out.
+ *
+ * Sellers can create a new product, edit or delete an existing product, create a new store,
+ * view the existing stores, view the seller's dashboard where information about the products
+ * that'd been sold can be found, or log out.
+ *
+ * Concurrency allows multiple users to be logged in simultaneously, with real time updates made to the marketplace and the
+ * products available for sale.
+ */
+
 public class Marketplace {
 
     public static void main(String[] args) throws IOException {
