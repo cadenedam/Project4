@@ -1,5 +1,1 @@
-cadenedam;newstore;dog toy;it is a dog toy;1;5.99
-cadenedam;newstore;dog toy;it is a dog toy;1;5.99
-cadenedam;newstore;dog toy;it is a dog toy;1;5.99
-cadenedam;newstore;dog toy;it is a dog toy;1;5.99
-cadenedam;newstore;dog toy;it is a dog toy;1;5.99
+customer;newstore;newproduct;newproduct description;1;5.29
