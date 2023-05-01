@@ -17,6 +17,7 @@ IMPORTANT 2: "User logs in as (seller/customer)" means the user does the followi
 9. User selects "Ok"
 
 Expected result: "Success" panel pops up, new user account is created in users.txt as type Seller.
+
 Test Status: Passed
 
 <b>Test 2: Create Customer Account</b>
@@ -31,6 +32,7 @@ Test Status: Passed
 9. User selects "Ok"
 
 Expected result: "Success" panel pops up, new user account is created in users.txt as type Customer.
+
 Test Status: Passed
 
 <b>Test 3: Create Seller Store</b>
@@ -42,6 +44,7 @@ Test Status: Passed
 6. User enters store name using keyboard, hits "Ok"
 
 Expected Result: New store is created in stores.txt under user's username
+
 Test Status: Passed
 
 <b>Test 4: Create Product</b>
@@ -55,6 +58,7 @@ Test Status: Passed
 8. User enters a double for how much it costs using keyboard, hits "Ok"
 
 Expected Result: New product is created in products.txt with all information entered above
+
 Test Status: Passed
 
 <b>Test 5: View Stores</b>
@@ -64,6 +68,7 @@ Test Status: Passed
 4. User hits "Ok"
 
 Expected Result: Window pops up listing seller's stores
+
 Test Status: Passed
 
 <b>Test 6: View Marketplace</b>
@@ -72,6 +77,7 @@ Test Status: Passed
 3. User selects "View Marketplace" from dropdown, hits "Ok"
 
 Expected Result: Window pops up with items in marketplace
+
 Test Status: Passed
 
 <b>Test 7: Purchase from marketplace</b>
@@ -86,6 +92,7 @@ Test Status: Passed
 9. User types an integer less than or equal to quantity available using keyboard, hits "Ok"
 
 Expected Result: Window pops up saying "Success!", and item is added to purchased.txt
+
 Test Status: Passed
 
 <b>Test 8: View Purchase History</b>
@@ -94,4 +101,5 @@ Test Status: Passed
 3. User selects "Review purchases history" from dropdown, hits "Ok"
 
 Expected Result: Window pops up displaying product, price, and quantity bought for the customer's purchase history
+
 Test Status: Passed
