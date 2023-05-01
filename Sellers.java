@@ -148,7 +148,7 @@ public class Sellers extends Selection{
     public String getUsername() {
         return username;
     }
-    //Note that this method is never used
+    //Note that this method is called using HashMaps
 
     //end of the class
 }

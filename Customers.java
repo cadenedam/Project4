@@ -5,7 +5,7 @@ import java.io.*;
  *
  * Customers can view the overall marketplace listing products for sale,
  * use viewMarketPlace to search for specific products using terms that match
- * the name, store, or description, and sort - the marketplace on price or quantity available.
+ * the name, store, or description, and sort the marketplace on price or quantity available.
  * Using sortByQuantity and sortByPrice
  * Customers can purchase items from the product page and
  * review a history of their previously purchased items.
@@ -194,8 +194,7 @@ public class Customers extends Selection {
     public String getUsername() {
         return username;
     }
-
-    //Note that this getter is never used
+    //Note that this method is called using HashMaps
 
     //end of the class
 }

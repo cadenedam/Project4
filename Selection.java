@@ -12,12 +12,6 @@ public class Selection {
     File fileProducts = new File("products.txt");
     File filePurchased = new File("purchases.txt");
 
-
-//    public Selection(List<String> products) {
-//        this.products = products;
-//    }
-    //the constructor above may not be necessary
-
     public ArrayList<String> readFile(String filename) throws FileNotFoundException {
         ArrayList<String> list = new ArrayList<>();
         try {

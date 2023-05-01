@@ -20,17 +20,14 @@ public class ShoppingCart {
         this.username = username;
         this.password = password;
     }
-    //Note that this constructor is never used
 
     public void createCart() throws IOException {
-        // if you create the shopping cart when the customer account is created,
-        // it will be simple to prevent calling it multiple times
+        // This method creates a new shopping cart file for each unique username
         File file = new File("shoppingCart." + username + ".txt");
         BufferedWriter newCart = new BufferedWriter(new FileWriter(file));
         //file.createNewFile();
         newCart.close();
     }
-    //Note that this method is never used
 
     //This method adds a product to the user's cart and creates a file named after them with
     //some characteristics of the product, like the store, name of product, quantity bought, and price.
@@ -40,7 +37,6 @@ public class ShoppingCart {
         pw.println();
         pw.close();
     }
-    //Note that this method is never used
 
     //This method will remove an item from the user's shoppingCart
     void removeFromCart(String store, String product, int quantity, double price) throws IOException {
@@ -61,7 +57,6 @@ public class ShoppingCart {
         inFile.delete();
         tempFile.renameTo(inFile);
     }
-    //Note that this method is never called
 
     //This returns a String array of the user's shopping cart.
     public String [] getCart() throws IOException {
@@ -73,7 +68,6 @@ public class ShoppingCart {
         }
         return cart.toArray(new String[0]);
     }
-    //Note that this method is never used
 
     //end of the class
 }

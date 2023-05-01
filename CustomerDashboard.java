@@ -20,7 +20,6 @@ public class CustomerDashboard {
         this.username = username;
         this.password = password;
     }
-    //Note that this constructor is never used
 
     public void viewDashboard(String[] storesList, String[] productsList, String[] productsBought) {
         //storesList - each store index corresponds to the productList index
@@ -65,7 +64,6 @@ public class CustomerDashboard {
                 "Dashboard", JOptionPane.INFORMATION_MESSAGE);
         //This displays the dashboardMessage
     }
-    //Note that this method is never used
 
     //end of the class
 }
