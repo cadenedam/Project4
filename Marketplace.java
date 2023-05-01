@@ -186,7 +186,7 @@ public class Marketplace {
                                                                 JOptionPane.ERROR_MESSAGE);
                                                     }
                                                     break;
-                                                    //This allows the customer to view their purchase history
+                                                //This allows the customer to view their purchase history
                                                 case 3:
                                                     String purchaseHistory = socketReader.readUTF();
                                                     JOptionPane.showMessageDialog(null, purchaseHistory,
@@ -246,12 +246,11 @@ public class Marketplace {
 
                                             switch (selectionNum) {
                                                 //Seller creates a product
+                                                //When the seller creates a product the products.txt file is updated to accommodate the changes.
                                                 case 1:
                                                     String product = JOptionPane.showInputDialog(null, "What's the name of the product?",
                                                             "Create Product", JOptionPane.QUESTION_MESSAGE);
                                                     socketWriter.writeUTF(product);
-                                                    // mot sure why this is here
-                                                    // System.out.println(" (case sensitive)");
 
                                                     String[] storesArray = (socketReader.readUTF()).split(",");
                                                     String productStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
@@ -260,6 +259,8 @@ public class Marketplace {
                                                     socketWriter.writeUTF(productStore);
                                                     String storeExists = socketReader.readUTF();
 
+                                                    //If the selected store already exists the seller is prompted with questions about the product's description,
+                                                    //quantity available, and price.
                                                     if (storeExists.equals("yes")) {
                                                         //Get all info for product, add product
                                                         String description = JOptionPane.showInputDialog(null, "What's the product description?",
@@ -302,8 +303,6 @@ public class Marketplace {
                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE);
                                                         socketWriter.writeUTF(newProduct);
 
-                                                        // mot sure why this is here
-                                                        // System.out.println(" (case sensitive)");
                                                         String[] storesArrays = socketReader.readUTF().split(", ");
                                                         String newProductStore = (String) JOptionPane.showInputDialog(null, "Which store will it go in?",
                                                                 "Update Product", JOptionPane.QUESTION_MESSAGE, null, storesArrays, storesArrays[0]);
@@ -311,6 +310,8 @@ public class Marketplace {
 
                                                         String newStoreExists = socketReader.readUTF();
 
+                                                        //The store information can only be updated if the store chosen already exists
+                                                        //All the information necessary to update products.txt is now available
                                                         if (newStoreExists.equals("yes")) {
                                                             //Get all info for product, add product
                                                             String newDescription = JOptionPane.showInputDialog(null, "What's the product description?",
@@ -329,7 +330,7 @@ public class Marketplace {
                                                             JOptionPane.showMessageDialog(null, "That store doesn't exist!", "Error",
                                                                     JOptionPane.ERROR_MESSAGE);
                                                         }
-                                                        //Deletes product
+                                                        //Deletes product, if it is valid (already present in products.txt)
                                                     } else if (choiceNum == 2) {
                                                         String[] productsArray = socketReader.readUTF().split(", ");
                                                         String unwantedProduct = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
@@ -337,17 +338,18 @@ public class Marketplace {
                                                                 null, productsArray, productsArray[0]);
                                                         socketWriter.writeUTF(unwantedProduct);
                                                     } else {
+                                                        //The product selected could not be deleted because it wasn't a valid choice
                                                         JOptionPane.showMessageDialog(null, "Pick a valid number please", "Error",
                                                                 JOptionPane.ERROR_MESSAGE);
                                                     }
                                                     break;
-                                                //Create store
+                                                //Create a new store
                                                 case 3:
                                                     String storeName = JOptionPane.showInputDialog(null, "What's the name of the store?",
                                                             "Create Store", JOptionPane.QUESTION_MESSAGE);
                                                     socketWriter.writeUTF(storeName);
                                                     break;
-                                                //View Stores
+                                                //View the existing stores
                                                 case 4:
                                                     String allStores = socketReader.readUTF();
                                                     JOptionPane.showMessageDialog(null, allStores,
@@ -363,7 +365,7 @@ public class Marketplace {
                                                     JOptionPane.showMessageDialog(null, dashboard,
                                                             "Dashboard", JOptionPane.INFORMATION_MESSAGE);
                                                     break;
-                                                //Logout
+                                                //Logs the seller out of their account
                                                 case 6:
                                                     JOptionPane.showMessageDialog(null, "Goodbye!",
                                                             "Log Out", JOptionPane.INFORMATION_MESSAGE);
@@ -374,17 +376,19 @@ public class Marketplace {
                                             }
                                         } while (selectionNum != 6);
 
-                                    } else {
+                                    } //A user with the account type seller was unable to login
+                                    else {
                                         JOptionPane.showMessageDialog(null, "Login failed!", "Error",
                                                 JOptionPane.ERROR_MESSAGE);
                                     }
                                 } while (!loggedIn);
                                 break;
                             case 3:
-                                //User creation system NEEDS TO BE TRANSFERRED TO SERVER SIDE
-                                //Add new user authentication?
+                                //This creates a new account
                                 boolean userTaken;
                                 String username;
+                                //This will keep prompting the user to enter a username until they choose a unique one
+                                //The prompt is repeated if the username was already taken (already occurs in users.txt)
                                 do {
                                     username = JOptionPane.showInputDialog(null, "Please enter a username:",
                                             "Create Account", JOptionPane.QUESTION_MESSAGE);
@@ -405,18 +409,21 @@ public class Marketplace {
                                     }
                                 } while (userTaken);
 
+                                //Creates the password for the new user
                                 String password = JOptionPane.showInputDialog(null, "Please enter a password:",
                                         "Create Account", JOptionPane.QUESTION_MESSAGE);
                                 String[] userTypeArray = {"1. Customer", "2. Seller"};
                                 String userTypeNew = (String) JOptionPane.showInputDialog(null, "\"Are you a...",
                                         "Create Account", JOptionPane.QUESTION_MESSAGE, null, userTypeArray, userTypeArray[0]);
                                 int userTypeNum = Integer.parseInt(String.valueOf(userTypeNew.charAt(0)));
+                                //This creates the new, unique, customer with the username and password from above
                                 if (userTypeNum == 1) {
                                     try {
                                         addUser("Customer", username, password);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
+                                    //This creates the new, unique, customer with the username and password from above
                                 } else if (userTypeNum == 2) {
                                     try {
                                         addUser("Seller", username, password);
@@ -429,6 +436,7 @@ public class Marketplace {
                                 }
                                 break;
                         }
+                        //This is all repeated so long as teh user is not logged in
                     } while (!validUser);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -449,7 +457,9 @@ public class Marketplace {
                 }
             }
         });
+        //end of the SwingUtilities.invokeLater method
     }
+    //end of the main method
 
     //This method adds a new user to the users.txt file with the username and password the user enters.
     //The account is then added in the format userType; username; password.
@@ -468,3 +478,4 @@ public class Marketplace {
         }
     }
 }
+//end of the class
